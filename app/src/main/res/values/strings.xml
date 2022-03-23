@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Zzler</string>
+    <string name="app_name" translatable="false">Zzler</string>
+    <string name="main_img" translatable="false">Main_Img</string>
 </resources>
