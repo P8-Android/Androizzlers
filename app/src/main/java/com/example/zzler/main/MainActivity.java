@@ -1,9 +1,11 @@
-package com.example.zzler;
+package com.example.zzler.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+
+import com.example.zzler.R;
 
 public class MainActivity extends AppCompatActivity {
 
