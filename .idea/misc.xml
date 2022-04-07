@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2605" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2605" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2605" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_main.xml" value="0.45" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_puzzle_game.xml" value="0.33541666666666664" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_puzzle_list.xml" value="0.33541666666666664" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_score.xml" value="0.33541666666666664" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/toolbar.xml" value="0.31614583333333335" />
+      </map>
+    </option>
   </component>
-  <component name="ProjectType">
-    <option name="id" value="Android" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
