@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Zzler</string>
+    <string name="app_name" translatable="false">Puzzle</string>
     <string name="main_img" translatable="false">Main_Img</string>
     <string name="btnScore" translatable="false">Score</string>
     <string name="btnGame" translatable="false">Game</string>

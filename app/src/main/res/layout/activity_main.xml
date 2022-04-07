@@ -1,103 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
 
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/Theme.Zzler"
+        app:popupTheme="@style/Theme.Zzler">
+
+    </androidx.appcompat.widget.Toolbar>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EFE8E8"
-        android:orientation="vertical"
-        android:translationY="@dimen/cardview_compat_inset_shadow">
+        android:orientation="vertical">
+
 
         <ImageView
             android:id="@+id/imgMain"
             android:layout_width="386dp"
             android:layout_height="wrap_content"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
+            android:scaleType="center"
             android:translationX="10dp"
             android:translationY="95dp"
             app:srcCompat="@mipmap/imgmain" />
 
         <Button
             android:id="@+id/bntScore"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="200dp"
             android:backgroundTint="#FFD3BCBC"
-            android:text="@string/btnGame"
-            android:translationX="150dp"
-            android:translationY="200dp" />
+            android:fontFamily="@font/chewy"
+            android:text="@string/btnGame" />
 
         <Button
             android:id="@+id/btnGame"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:backgroundTint="#FFD3BCBC"
-            android:text="@string/btnScore"
-            android:translationX="150dp"
-            android:translationY="220dp" />
+            android:fontFamily="@font/chewy"
+            android:text="@string/btnScore" />
 
     </LinearLayout>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
 
-        android:layout_width="match_parent"
-        android:layout_height="90dp">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#9A8888"
-            app:contentScrim="?attr/colorPrimary"
-
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"></androidx.appcompat.widget.Toolbar>
-
-            <TextView
-                android:id="@+id/nameAppBar"
-                android:layout_width="105dp"
-                android:layout_height="56dp"
-                android:text="@string/app_name"
-                android:textSize="48sp" />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-
-
-            android:id="@+id/coordinatorLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="#FDEFBC"
+        android:background="#B8977E"
+        android:src="@drawable/ic_baseline_info_24"
+        android:layout_margin="20dp">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-    "
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        style="@style/">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
