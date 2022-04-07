@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/Theme.Zzler"
+        app:popupTheme="@style/Theme.Zzler">
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EFE8E8"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imgMain"
+            android:layout_width="386dp"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:translationX="10dp"
+            android:translationY="95dp"
+            app:srcCompat="@mipmap/imgmain" />
+
+        <Button
+            android:id="@+id/bntScore"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="200dp"
+            android:backgroundTint="#FFD3BCBC"
+            android:fontFamily="@font/chewy"
+            android:text="@string/btnGame" />
+
+        <Button
+            android:id="@+id/btnGame"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#FFD3BCBC"
+            android:fontFamily="@font/chewy"
+            android:text="@string/btnScore" />
+
+    </LinearLayout>
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="#FDEFBC"
+        android:background="#B8977E"
+        android:src="@drawable/ic_baseline_info_24"
+        android:layout_margin="20dp">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        style="@style/">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

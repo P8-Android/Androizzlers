@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Zzler" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#fff3e0</item>
+        <item name="colorPrimaryVariant">#ffffff</item>
+        <item name="colorOnPrimary">#ccc0ae</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#6d4c41</item>
+        <item name="colorSecondaryVariant">#9c786c</item>
+        <item name="colorOnSecondary">#40241a</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">#fff3e0</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
