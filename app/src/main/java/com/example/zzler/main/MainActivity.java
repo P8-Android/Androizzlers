@@ -3,9 +3,12 @@ package com.example.zzler.main;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.zzler.R;
+import com.example.zzler.webView.Info;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,5 +20,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+    }
+
+    public void showInfo (View v){
+        Intent i = new Intent (this, Info.class);
+        startActivity(i);
     }
 }
