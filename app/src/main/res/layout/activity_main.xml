@@ -42,7 +42,8 @@
             android:layout_marginTop="200dp"
             android:backgroundTint="#FFD3BCBC"
             android:fontFamily="@font/chewy"
-            android:text="@string/btnGame" />
+            android:text="@string/btnGame"
+            android:onClick="goGame"/>
 
         <Button
             android:id="@+id/btnGame"
@@ -64,8 +65,8 @@
         android:backgroundTint="#FDEFBC"
         android:background="#B8977E"
         android:src="@drawable/ic_baseline_info_24"
-        android:layout_margin="20dp">
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        android:layout_margin="20dp"
+    />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -73,9 +74,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="20dp"
-        style="@style/">
+        style="@style/"
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+    />
 
 
 
