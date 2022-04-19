@@ -74,8 +74,11 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
         imageView.getImageMatrix().getValues(f);
 
         // Extract the scale values using the constants (if aspect ratio maintained, scaleX == scaleY)
-        final float scaleX = f[Matrix.MSCALE_X];
-        final float scaleY = f[Matrix.MSCALE_Y];
+        final float scaleX = (float) 0.5;
+        final float scaleY = (float) 0.5;
+
+        //final float scaleX = f[Matrix.MSCALE_X];
+        //final float scaleY = f[Matrix.MSCALE_Y];
 
         // Get the drawable (could also get the bitmap behind the drawable and getWidth/getHeight)
         final Drawable d = imageView.getDrawable();
