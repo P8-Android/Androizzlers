@@ -28,7 +28,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
 
-        final ConstraintLayout layout = findViewById(R.id.cons);
+        final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
         // Handler handler = new Handler();
         // run image related code after the view was laid out
