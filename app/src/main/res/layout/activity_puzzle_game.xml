@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cons"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.zzler.puzzleGame.PuzzleGameView"
-    >
+    tools:context="com.example.zzler.puzzleGame.PuzzleGameView">
     <!--  -->
     <ImageView
         android:id="@+id/imageView"
@@ -18,11 +18,14 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth="match_parent"
         app:srcCompat="@drawable/photo" />
+
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
@@ -30,6 +33,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </RelativeLayout>
+        app:layout_constraintTop_toTopOf="parent"></RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

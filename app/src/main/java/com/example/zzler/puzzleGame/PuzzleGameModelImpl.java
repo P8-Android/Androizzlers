@@ -20,9 +20,9 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
 
 
     protected static ArrayList<Bitmap> splitImage(ImageView img) {
-        int piecesNumber = 4;
-        int rows = 2;
-        int cols = 2;
+        int piecesNumber = 12;
+        int rows = 4;
+        int cols = 3;
 
         ImageView imageView = img;
         ArrayList<Bitmap> pieces = new ArrayList<>(piecesNumber);
@@ -32,33 +32,15 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
         Bitmap bitmap = drawable.getBitmap();
 
         // Calculate the with and height of the pieces
-        //int pieceWidth = bitmap.getWidth()/cols;
-        //int pieceHeight = bitmap.getHeight()/rows;
-
-        int[] dimensions = getBitmapPositionInsideImageView(imageView);
-        int scaledBitmapLeft = dimensions[0];
-        int scaledBitmapTop = dimensions[1];
-        int scaledBitmapWidth = dimensions[2];
-        int scaledBitmapHeight = dimensions[3];
-
-        int croppedImageWidth = scaledBitmapWidth - 2 * abs(scaledBitmapLeft);
-        int croppedImageHeight = scaledBitmapHeight - 2 * abs(scaledBitmapTop);
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledBitmapWidth, scaledBitmapHeight, true);
-        Bitmap croppedBitmap = Bitmap.createBitmap(scaledBitmap, abs(scaledBitmapLeft), abs(scaledBitmapTop), croppedImageWidth, croppedImageHeight);
-
-        // Calculate the with and height of the pieces
-        int pieceWidth = croppedImageWidth/cols;
-        int pieceHeight = croppedImageHeight/rows;
+        int pieceWidth = bitmap.getWidth()/cols;
+        int pieceHeight = bitmap.getHeight()/rows;
 
         // Create each bitmap piece and add it to the resulting array
         int yCoord = 0;
         for (int row = 0; row < rows; row++) {
             int xCoord = 0;
             for (int col = 0; col < cols; col++) {
-                //////////////***************CON CALZADOR***********************////////////////////////////////
-                pieces.add(Bitmap.createBitmap(bitmap, 0, 0, 2, 2));
-                //pieces.add(Bitmap.createBitmap(bitmap, xCoord, yCoord, pieceWidth, pieceHeight));
+                pieces.add(Bitmap.createBitmap(bitmap, xCoord, yCoord, pieceWidth, pieceHeight));
                 xCoord += pieceWidth;
             }
             yCoord += pieceHeight;
@@ -66,6 +48,7 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
 
         return pieces;
     }
+
 
     protected static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
