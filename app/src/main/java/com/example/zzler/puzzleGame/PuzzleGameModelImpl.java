@@ -27,20 +27,32 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
         ImageView imageView = img;
         ArrayList<Bitmap> pieces = new ArrayList<>(piecesNumber);
 
-        // Get the bitmap of the source image
+        // Get the scaled bitmap of the source image
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
 
+        int[] dimensions = getBitmapPositionInsideImageView(imageView);
+        int scaledBitmapLeft = dimensions[0];
+        int scaledBitmapTop = dimensions[1];
+        int scaledBitmapWidth = dimensions[2];
+        int scaledBitmapHeight = dimensions[3];
+
+        int croppedImageWidth = scaledBitmapWidth - 2 * abs(scaledBitmapLeft);
+        int croppedImageHeight = scaledBitmapHeight - 2 * abs(scaledBitmapTop);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledBitmapWidth, scaledBitmapHeight, true);
+        Bitmap croppedBitmap = Bitmap.createBitmap(scaledBitmap, abs(scaledBitmapLeft), abs(scaledBitmapTop), croppedImageWidth, croppedImageHeight);
+
         // Calculate the with and height of the pieces
-        int pieceWidth = bitmap.getWidth()/cols;
-        int pieceHeight = bitmap.getHeight()/rows;
+        int pieceWidth = croppedImageWidth/cols;
+        int pieceHeight = croppedImageHeight/rows;
 
         // Create each bitmap piece and add it to the resulting array
         int yCoord = 0;
         for (int row = 0; row < rows; row++) {
             int xCoord = 0;
             for (int col = 0; col < cols; col++) {
-                pieces.add(Bitmap.createBitmap(bitmap, xCoord, yCoord, pieceWidth, pieceHeight));
+                pieces.add(Bitmap.createBitmap(croppedBitmap, xCoord, yCoord, pieceWidth, pieceHeight));
                 xCoord += pieceWidth;
             }
             yCoord += pieceHeight;
@@ -50,7 +62,7 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
     }
 
 
-    protected static int[] getBitmapPositionInsideImageView(ImageView imageView) {
+    private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
 
         if (imageView == null || imageView.getDrawable() == null)
