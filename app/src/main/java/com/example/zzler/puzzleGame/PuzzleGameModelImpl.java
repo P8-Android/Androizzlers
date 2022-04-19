@@ -2,15 +2,11 @@ package com.example.zzler.puzzleGame;
 
 import static java.lang.Math.abs;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.zzler.R;
 
 import java.util.ArrayList;
 
@@ -19,13 +15,13 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
     private PuzzleGamePresenterImpl gamePresenter;
 
 
-    protected static ArrayList<Bitmap> splitImage(ImageView img) {
-        int piecesNumber = 12;
-        int rows = 4;
-        int cols = 3;
+    protected static ArrayList<PuzzlePiece> splitImage(ImageView img, Context context) {
+        int piecesNumber = 4;
+        int rows = 2;
+        int cols = 2;
 
         ImageView imageView = img;
-        ArrayList<Bitmap> pieces = new ArrayList<>(piecesNumber);
+        ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
@@ -52,7 +48,14 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
         for (int row = 0; row < rows; row++) {
             int xCoord = 0;
             for (int col = 0; col < cols; col++) {
-                pieces.add(Bitmap.createBitmap(croppedBitmap, xCoord, yCoord, pieceWidth, pieceHeight));
+                Bitmap pieceBitmap = Bitmap.createBitmap(croppedBitmap, xCoord, yCoord, pieceWidth, pieceHeight);
+                PuzzlePiece piece = new PuzzlePiece(context);
+                piece.setImageBitmap(pieceBitmap);
+                piece.xCoord = xCoord;
+                piece.yCoord = yCoord;
+                piece.pieceWidth = pieceWidth;
+                piece.pieceHeight = pieceHeight;
+                pieces.add(piece);
                 xCoord += pieceWidth;
             }
             yCoord += pieceHeight;

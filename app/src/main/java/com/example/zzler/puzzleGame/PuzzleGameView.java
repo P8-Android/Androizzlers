@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.zzler.puzzleGame.PuzzlePiece;
 
 import com.example.zzler.R;
 
@@ -21,7 +22,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Float timeGameSolved;
     private PuzzleGamePresenterImpl gamePresenter;
 
-    ArrayList<Bitmap> pieces;
+    ArrayList<PuzzlePiece> pieces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(imageView);
+                pieces = splitImage(imageView, getApplicationContext());
                 TouchListener touchListener = new TouchListener();
-                for(Bitmap piece : pieces) {
-                    ImageView iv = new ImageView(getApplicationContext());
-                    iv.setImageBitmap(piece);
-                    iv.setOnTouchListener(touchListener);
-                    layout.addView(iv);
+                for(PuzzlePiece piece : pieces) {
+                    piece.setOnTouchListener(touchListener);
+                    layout.addView(piece);
                 }
             }
         });
