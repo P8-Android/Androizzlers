@@ -58,16 +58,16 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     protected ArrayList<PuzzlePiece> splitImage() {
-        int piecesNumber = 4;
-        int rows = 2;
-        int cols = 2;
+        int piecesNumber = 9;
+        int rows = 3;
+        int cols = 3;
 
         ImageView imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-        //Bitmap bitmap = drawable.getBitmap();
+        //Bitmap bitmap = drawable.getBitmap(); BUG
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.photo);
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
         int scaledBitmapLeft = dimensions[0];
