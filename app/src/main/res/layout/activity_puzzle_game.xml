@@ -57,6 +57,7 @@
         android:backgroundTint="#FDEFBC"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        android:onClick="upLevel"
         android:src="@drawable/ic_baseline_info_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/timeGame"

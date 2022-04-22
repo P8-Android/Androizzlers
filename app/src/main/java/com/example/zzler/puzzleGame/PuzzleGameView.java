@@ -3,6 +3,8 @@ package com.example.zzler.puzzleGame;
 
 import static java.lang.Math.abs;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +16,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -30,6 +35,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     private Float timeGameSolved;
     private PuzzleGamePresenterImpl gamePresenter;
+    private Integer dificulty;
+    private int count;
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -43,11 +50,35 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         // Handler handler = new Handler();
         // run image related code after the view was laid out
         // to have all dimensions calculated
+        ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
+        dificulty = 2;
+        count=1;
+        btnUpLevel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                count++;
+                for(PuzzlePiece piece : pieces) {
+                    layout.removeView(piece);
+                }
+                imageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        pieces.removeAll(pieces);
+                        pieces = splitImage(dificulty+count);
+                        TouchListener touchListener = new TouchListener();
+                        for(PuzzlePiece piece : pieces) {
+                            piece.setOnTouchListener(touchListener);
+                            layout.addView(piece);
+                        }
+                    }
+                });
+            }
+        });
 
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage();
+                pieces = splitImage(2);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
@@ -57,10 +88,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         });
     }
 
-    protected ArrayList<PuzzlePiece> splitImage() {
-        int piecesNumber = 9;
-        int rows = 3;
-        int cols = 3;
+    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
+        int rows = dificulty;
+        int cols = dificulty;
+        int piecesNumber = rows*cols;
 
         ImageView imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
@@ -197,6 +228,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         return pieces;
     }
 
+    public void setDificulty(Integer dificulty){
+        this.dificulty = dificulty;
+    }
 
     private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
@@ -241,6 +275,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
         return ret;
     }
+
 
     @Override
     public void showNextPuzzle(ImageView img) {
