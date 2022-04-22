@@ -16,11 +16,13 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -53,6 +55,19 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
         dificulty = 2;
         count=1;
+
+        /*new android.os.Handler(Looper.getMainLooper()).postDelayed(
+                new Runnable() {
+                    public void run() {
+                        if(isWinner()){
+                            TextView textFinish = findViewById(R.id.txtFinish);
+                            textFinish.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                },
+                1000);
+*/
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -65,12 +80,15 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     public void run() {
                         pieces.removeAll(pieces);
                         pieces = splitImage(dificulty+count);
+
                         TouchListener touchListener = new TouchListener();
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
                         }
                     }
+
+
                 });
             }
         });
@@ -80,9 +98,17 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             public void run() {
                 pieces = splitImage(2);
                 TouchListener touchListener = new TouchListener();
+                if (isWinner()) stop();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
+
+                }
+            }
+            public void stop(){
+                if(isWinner()){
+                    TextView textFinish = findViewById(R.id.txtFinish);
+                    textFinish.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -228,10 +254,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         return pieces;
     }
 
-    public void setDificulty(Integer dificulty){
-        this.dificulty = dificulty;
-    }
-
     private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
 
@@ -292,7 +314,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     public boolean isWinner (){
-        return false;
+        boolean flag = false;
+        for(PuzzlePiece piece : pieces) {
+            if (piece.getCanMove()==false){ //si todas las piezas no se pueden mover, se terminó el puzzle
+                flag = true;
+            }
+        }
+        return flag;
     }
 
 

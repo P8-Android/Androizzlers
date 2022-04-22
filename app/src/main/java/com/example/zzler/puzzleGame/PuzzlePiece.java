@@ -13,4 +13,11 @@ public class PuzzlePiece extends androidx.appcompat.widget.AppCompatImageView {
     public PuzzlePiece(Context context) {
         super(context);
     }
+
+
+    public boolean getCanMove (){
+        return this.canMove;
+    }
+
+
 }
