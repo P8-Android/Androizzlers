@@ -18,7 +18,7 @@ public class TouchListener implements View.OnTouchListener {
     private float xDelta;
     private float yDelta;
 
-    Boolean cantMove[] = new Boolean [PuzzleGameView.dificulty*PuzzleGameView.dificulty];
+    static Boolean  cantMove[] = new Boolean [PuzzleGameView.dificulty*PuzzleGameView.dificulty];
     int count = 0;
 
     @Override
@@ -29,11 +29,7 @@ public class TouchListener implements View.OnTouchListener {
 
         PuzzlePiece piece = (PuzzlePiece) view;
         if (!piece.canMove) {
-            cantMove[count] = false;
-            count++;
-            if(cantMove[cantMove.length-1]==false){
-                isfinish();
-            }
+
             return true;
         }
 
@@ -59,7 +55,11 @@ public class TouchListener implements View.OnTouchListener {
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
                     sendViewToBack(piece);
+                    cantMove[count] = false;
+                    count++;
+
                 }
+               
                 break;
         }
 
@@ -75,6 +75,12 @@ public class TouchListener implements View.OnTouchListener {
             parent.addView(child, 0);
         }
 
+    }
+
+    public static void puzzleFinish(){
+        if(cantMove.length==3){
+            PuzzleGameView.resolved();
+        }
     }
 
     public boolean isfinish(){

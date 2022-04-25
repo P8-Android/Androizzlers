@@ -47,6 +47,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     ArrayList<PuzzlePiece> pieces;
 
 
+
     public Integer getDificulty() {
         return dificulty;
     }
@@ -118,6 +119,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
+                    stop();
+
 
 
                     /*if(piece.getCanMove()==false){
@@ -127,8 +130,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
                 }
 
-
-
+            }
+            public void stop() {
+                TouchListener.puzzleFinish();
             }
             /*Message msg = new Message();
             for(PuzzlePiece piece : pieces) {
