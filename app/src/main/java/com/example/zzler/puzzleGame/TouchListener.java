@@ -77,24 +77,6 @@ public class TouchListener implements View.OnTouchListener {
 
     }
 
-    public static void puzzleFinish(){
-        if(cantMove.length==3){
-            PuzzleGameView.resolved();
-        }
-    }
-
-    public boolean isfinish(){
-
-        for (int i=0;i<cantMove.length;i++){
-            if(cantMove[i] == null){
-                return true;
-            }else{
-                PuzzleGameView.resolved();
-                return true;
-            }
-        }
-        return true;
-    }
 }
 
 
