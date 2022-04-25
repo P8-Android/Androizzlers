@@ -98,22 +98,27 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             public void run() {
                 pieces = splitImage(2);
                 TouchListener touchListener = new TouchListener();
-                if (isWinner()) stop();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
+                    if(piece.getCanMove()==false){
+                        resolved();
+                        finish();
+                    }
 
                 }
+
+
+
             }
-            public void stop(){
-                if(isWinner()){
-                    TextView textFinish = findViewById(R.id.txtFinish);
-                    textFinish.setVisibility(View.VISIBLE);
-                }
-            }
+
         });
     }
 
+    private void resolved(){
+        TextView textFinish = findViewById(R.id.txtFinish);
+        textFinish.setVisibility(View.VISIBLE);
+    }
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
         int rows = dificulty;
         int cols = dificulty;
@@ -318,6 +323,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         for(PuzzlePiece piece : pieces) {
             if (piece.getCanMove()==false){ //si todas las piezas no se pueden mover, se terminó el puzzle
                 flag = true;
+            }else{
+                flag = false;
             }
         }
         return flag;
