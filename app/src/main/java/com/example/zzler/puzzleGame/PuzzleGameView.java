@@ -16,7 +16,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,20 +35,35 @@ import com.example.zzler.R;
 
 import java.util.ArrayList;
 
+@SuppressLint("HandlerLeak")
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
 
     private Float timeGameSolved;
     private PuzzleGamePresenterImpl gamePresenter;
-    private Integer dificulty;
+    protected static Integer dificulty;
     private int count;
+    static TextView textFinish;
 
     ArrayList<PuzzlePiece> pieces;
+
+
+    public Integer getDificulty() {
+        return dificulty;
+    }
+
+    private Handler getHandler = new Handler(){
+        public void handleMessage (Message msg){
+            if(msg.what == 1){
+                resolved();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
-
+        textFinish = findViewById(R.id.txtFinish);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
         // Handler handler = new Handler();
@@ -101,22 +118,32 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
-                    if(piece.getCanMove()==false){
+
+
+                    /*if(piece.getCanMove()==false){
                         resolved();
                         finish();
-                    }
+                    }*/
 
                 }
 
 
 
             }
+            /*Message msg = new Message();
+            for(PuzzlePiece piece : pieces) {
+                if(piece.getCanMove()==false){
+                msg.what = 1;
+                getHandler.sendMessage(msg);
+                }
+            }*/
 
         });
+
     }
 
-    private void resolved(){
-        TextView textFinish = findViewById(R.id.txtFinish);
+    protected static void resolved(){
+
         textFinish.setVisibility(View.VISIBLE);
     }
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
