@@ -44,6 +44,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private int count;
     static TextView textFinish;
 
+
     ArrayList<PuzzlePiece> pieces;
 
 
@@ -64,6 +65,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
+
         textFinish = findViewById(R.id.txtFinish);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
@@ -119,7 +121,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
-                    stop();
+
+
 
 
 
@@ -131,9 +134,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 }
 
             }
-            public void stop() {
-                TouchListener.puzzleFinish();
-            }
+
             /*Message msg = new Message();
             for(PuzzlePiece piece : pieces) {
                 if(piece.getCanMove()==false){
