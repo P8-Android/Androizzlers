@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,6 +35,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.zzler.R;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressLint("HandlerLeak")
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
@@ -43,6 +46,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static Integer dificulty;
     private int count;
     static TextView textFinish;
+    static TextView txtTimeGame;
+
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -52,6 +57,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         setContentView(R.layout.activity_puzzle_game);
 
         textFinish = findViewById(R.id.txtFinish);
+        txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
 
@@ -59,15 +65,24 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         // to have all dimensions calculated
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
         dificulty = 2;
-        count=1;
+        count = 1;
 
-        new android.os.Handler(Looper.getMainLooper()).postDelayed(
-                new Runnable() {
-                    public void run() {
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            Integer time = 0;
+            @Override
+            public void run(){ runOnUiThread (new Runnable() {
+                @Override
+                public void run() {
+                    time++;
 
+                    txtTimeGame.setText(time.toString() + " Segundos");
+                    //Log.i("interval",time.toString());
                     }
-                },
-                1000);
+                });
+            }
+        },0,1000);
+
+
 
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
