@@ -44,22 +44,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private int count;
     static TextView textFinish;
 
-
     ArrayList<PuzzlePiece> pieces;
-
-
-
-    public Integer getDificulty() {
-        return dificulty;
-    }
-
-    private Handler getHandler = new Handler(){
-        public void handleMessage (Message msg){
-            if(msg.what == 1){
-                resolved();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,25 +54,21 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         textFinish = findViewById(R.id.txtFinish);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
-        // Handler handler = new Handler();
+
         // run image related code after the view was laid out
         // to have all dimensions calculated
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
         dificulty = 2;
         count=1;
 
-        /*new android.os.Handler(Looper.getMainLooper()).postDelayed(
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(
                 new Runnable() {
                     public void run() {
-                        if(isWinner()){
-                            TextView textFinish = findViewById(R.id.txtFinish);
-                            textFinish.setVisibility(View.VISIBLE);
-                        }
 
                     }
                 },
                 1000);
-*/
+
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -95,20 +76,19 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 for(PuzzlePiece piece : pieces) {
                     layout.removeView(piece);
                 }
+                TouchListener.countToShowFinishMsg = 0;
+                textFinish.setVisibility(View.GONE);
                 imageView.post(new Runnable() {
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
                         pieces = splitImage(dificulty+count);
-
                         TouchListener touchListener = new TouchListener();
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
                         }
                     }
-
-
                 });
             }
         });
@@ -116,33 +96,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(2);
+                pieces = splitImage(dificulty);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
-
-
-
-
-
-                    /*if(piece.getCanMove()==false){
-                        resolved();
-                        finish();
-                    }*/
-
                 }
-
             }
-
-            /*Message msg = new Message();
-            for(PuzzlePiece piece : pieces) {
-                if(piece.getCanMove()==false){
-                msg.what = 1;
-                getHandler.sendMessage(msg);
-                }
-            }*/
-
         });
 
     }

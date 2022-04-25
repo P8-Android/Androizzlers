@@ -8,19 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.example.zzler.R;
-
-import java.util.ArrayList;
 
 public class TouchListener implements View.OnTouchListener {
     private float xDelta;
     private float yDelta;
 
-    static Boolean  cantMove[] = new Boolean [PuzzleGameView.dificulty*PuzzleGameView.dificulty];
-    int count = 0;
-    static boolean flag = false;
+    static int countToShowFinishMsg = 0;
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -54,10 +47,12 @@ public class TouchListener implements View.OnTouchListener {
                     lParams.topMargin = piece.yCoord;
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
-                    count++;
+                    countToShowFinishMsg++;
                     sendViewToBack(piece);
-                    if(count == PuzzleGameView.dificulty*PuzzleGameView.dificulty){
+                    if(countToShowFinishMsg == PuzzleGameView.dificulty*PuzzleGameView.dificulty){
+                        countToShowFinishMsg = 0;
                         PuzzleGameView.resolved();
+
                     }
 
 
