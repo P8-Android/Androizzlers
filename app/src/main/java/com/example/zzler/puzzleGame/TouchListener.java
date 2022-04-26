@@ -14,6 +14,11 @@ public class TouchListener implements View.OnTouchListener {
     private float yDelta;
 
     static int countToShowFinishMsg = 0;
+    static String timeTotal;
+
+    public static String getTimeTotal() {
+        return timeTotal;
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -51,7 +56,7 @@ public class TouchListener implements View.OnTouchListener {
                     sendViewToBack(piece);
                     if(countToShowFinishMsg == PuzzleGameView.dificulty*PuzzleGameView.dificulty){
                         countToShowFinishMsg = 0;
-                        PuzzleGameView.resolved();
+                        timeTotal = PuzzleGameView.resolved();
 
                     }
 

@@ -47,7 +47,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private int count;
     static TextView textFinish;
     static TextView txtTimeGame;
+    static Timer myTimer = new Timer();
 
+    static boolean paused;
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -60,25 +62,29 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
-
+        paused = false;
         // run image related code after the view was laid out
         // to have all dimensions calculated
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
         dificulty = 2;
         count = 1;
 
-        new Timer().scheduleAtFixedRate(new TimerTask(){
+        myTimer.scheduleAtFixedRate(new TimerTask(){
             Integer time = 0;
             @Override
             public void run(){ runOnUiThread (new Runnable() {
                 @Override
                 public void run() {
-                    time++;
-
-                    txtTimeGame.setText(time.toString() + " Segundos");
-                    //Log.i("interval",time.toString());
+                    if(!paused){
+                        time++;
+                        txtTimeGame.setText(time.toString() + " Segundos");
+                        //Log.i("interval",time.toString());
+                    }else{
+                        time = 0;
                     }
-                });
+
+                }
+            });
             }
         },0,1000);
 
@@ -88,11 +94,15 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void onClick(View view) {
                 count++;
+
+
                 for(PuzzlePiece piece : pieces) {
                     layout.removeView(piece);
                 }
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
+                paused = false;
+
                 imageView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -103,6 +113,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
                         }
+
                     }
                 });
             }
@@ -122,10 +133,23 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     }
 
-    protected static void resolved(){
 
+
+    protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
+        paused = true;
+        String timeString = (String) txtTimeGame.getText();
+        //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
+        txtTimeGame.setText("Tiempo final: "+timeString);
+        return timeString;
+
     }
+
+    protected static Integer calculateScore(){
+        String timeString = TouchListener.getTimeTotal();
+        return (int) 1/Integer.parseInt(timeString);
+    }
+
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
         int rows = dificulty;
         int cols = dificulty;
