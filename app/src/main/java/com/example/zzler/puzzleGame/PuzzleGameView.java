@@ -50,7 +50,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     static TextView textFinish;
     static TextView txtTimeGame;
     static Timer myTimer = new Timer();
-
+    Handler handler;
+    Runnable runable;
     static boolean paused;
 
     ArrayList<PuzzlePiece> pieces;
@@ -59,7 +60,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
-
+        handler = new Handler();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
@@ -73,8 +74,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
         myTimer.scheduleAtFixedRate(new TimerTask(){
             Integer time = 0;
+
             @Override
-            public void run(){ runOnUiThread (new Runnable() {
+            public void run(){ runOnUiThread (runable = new Runnable() {
                 @Override
                 public void run() {
                     if(!paused){
@@ -97,7 +99,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                myTimer.purge();
+                handler.removeCallbacks(runable);
                 count++;
 
 
