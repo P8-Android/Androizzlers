@@ -108,6 +108,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     public void run() {
                         pieces.removeAll(pieces);
                         pieces = splitImage(dificulty+count);
+                        dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener();
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
