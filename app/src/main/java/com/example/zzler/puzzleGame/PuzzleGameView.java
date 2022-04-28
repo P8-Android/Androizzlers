@@ -78,11 +78,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 @Override
                 public void run() {
                     if(!paused){
+
                         time++;
                         txtTimeGame.setText(time.toString() + " Segundos");
                         //Log.i("interval",time.toString());
                     }else{
                         time = 0;
+
                     }
 
                 }
@@ -95,6 +97,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                myTimer.purge();
                 count++;
 
 
@@ -103,7 +106,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 }
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
+
                 paused = false;
+
 
                 imageView.post(new Runnable() {
                     @Override
@@ -141,6 +146,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
+        myTimer.purge();
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
         txtTimeGame.setText("Tiempo final: "+timeString);
@@ -338,8 +344,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     public void goHome(View v){
-        //destruir PuzzleGameView activity
-        //Intent old = new Intent(this, PuzzleGameView.class);
+        paused = true;
+        dificulty = 2;
+        myTimer.purge();
         finish();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
