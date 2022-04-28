@@ -47,12 +47,12 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private PuzzleGamePresenterImpl gamePresenter;
     protected static Integer dificulty;
     private int count;
+    private static int countToTimer;
     static TextView textFinish;
     static TextView txtTimeGame;
     static Timer myTimer = new Timer();
-    Handler handler;
-    Runnable runable;
     static boolean paused;
+    static ArrayList<Timer> afterClickTimerCollection;
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -60,7 +60,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
-        handler = new Handler();
+
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
@@ -71,35 +71,20 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
         dificulty = 2;
         count = 1;
+        countToTimer = 0;
+        afterClickTimerCollection = new ArrayList<>();
 
-        myTimer.scheduleAtFixedRate(new TimerTask(){
-            Integer time = 0;
-
-            @Override
-            public void run(){ runOnUiThread (runable = new Runnable() {
-                @Override
-                public void run() {
-                    if(!paused){
-
-                        time++;
-                        txtTimeGame.setText(time.toString() + " Segundos");
-                        //Log.i("interval",time.toString());
-                    }else{
-                        time = 0;
-
-                    }
-
-                }
-            });
-            }
-        },0,1000);
-
+        startTimer();
 
 
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                handler.removeCallbacks(runable);
+
+                paused = true;
+                afterClickTimerCollection.get(countToTimer).cancel();
+                countToTimer++;
+                startTimer();
                 count++;
 
 
@@ -127,6 +112,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     }
                 });
             }
+
+
         });
 
         imageView.post(new Runnable() {
@@ -144,11 +131,36 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
 
+    protected void startTimer() {
+
+        afterClickTimerCollection.add(new Timer());
+        afterClickTimerCollection.get(countToTimer).scheduleAtFixedRate(new TimerTask(){
+
+            Integer time = 0;
+
+            @Override
+            public void run(){ runOnUiThread (new Runnable() {
+                @Override
+                public void run() {
+                    if(!paused){
+                        time++;
+                        txtTimeGame.setText(time.toString() + " Segundos");
+                        //Log.i("interval",time.toString());
+                    }else{
+                        time = 0;
+                    }
+                }
+            });
+            }
+        },0,1000);
+    }
+
+
 
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
-        myTimer.purge();
+        afterClickTimerCollection.get(countToTimer).purge();
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
         txtTimeGame.setText("Tiempo final: "+timeString);
@@ -160,6 +172,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         String timeString = TouchListener.getTimeTotal();
         return (int) 1/Integer.parseInt(timeString);
     }
+
+
 
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
         int rows = dificulty;
