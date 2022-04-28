@@ -2,6 +2,7 @@ package com.example.zzler.puzzleGame;
 
 
 import static java.lang.Math.abs;
+import com.example.zzler.main.MainActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 import com.example.zzler.R;
+import com.example.zzler.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -333,6 +335,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         ret[1] = top;
 
         return ret;
+    }
+
+    public void goHome(View v){
+        //destruir PuzzleGameView activity
+        //Intent old = new Intent(this, PuzzleGameView.class);
+        finish();
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 
 
