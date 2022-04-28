@@ -5,6 +5,6 @@ import android.widget.ImageView;
 public interface IPuzzleGameModel {
 
     void NextPuzzle(ImageView img);
-    void saveScoreToBBDD(Float timeToSolved);
+    long saveScoreToBBDD(String puzzleName, float timeToSolved);
 
 }

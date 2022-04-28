@@ -1,20 +1,42 @@
 package com.example.zzler.puzzleGame;
 
-import static java.lang.Math.abs;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.content.ContentValues;
 import android.widget.ImageView;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
+import androidx.annotation.Nullable;
 
-public class PuzzleGameModelImpl implements IPuzzleGameModel {
+
+public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGameModel {
 
     private PuzzleGamePresenterImpl gamePresenter;
 
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "zzlerDB.db";
+    public static final String TABLE_NAME = "t_score";
+    Context context;
 
+    public PuzzleGameModelImpl(@Nullable Context context) {
+        super(context,DATABASE_NAME, null, DATABASE_VERSION );
+        this.context = context;
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "puzzleName TEXT NOT NULL," +
+                "timeToSolved REAL NOT NULL)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("DROP TABLE " + TABLE_NAME);
+        onCreate(sqLiteDatabase);
+    }
 
 
 
@@ -23,8 +45,26 @@ public class PuzzleGameModelImpl implements IPuzzleGameModel {
 
     }
 
-    @Override
-    public void saveScoreToBBDD(Float timeToSolved) {
 
+
+    @Override
+    public long saveScoreToBBDD(String puzzleName, float timeToSolved) {
+        long id = 0;
+
+        try {
+            PuzzleGameModelImpl dbHelper = new PuzzleGameModelImpl(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put("puzzleName", puzzleName);
+            values.put("timeToSolved", timeToSolved);
+
+            id = db.insert(TABLE_NAME, null, values);
+        } catch (Exception ex) {
+            ex.toString();
+        }
+        return id;
     }
+
+
 }

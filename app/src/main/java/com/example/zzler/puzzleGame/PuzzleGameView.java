@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.example.zzler.main.MainActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,24 +18,17 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 
 
 import com.example.zzler.R;
-import com.example.zzler.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -53,6 +47,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     static Timer myTimer = new Timer();
     static boolean paused;
     static ArrayList<Timer> afterClickTimerCollection;
+    boolean activateDB;
+    Context context;
+
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -60,15 +57,17 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
-
+        gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
         ImageView imageView = findViewById(R.id.imageView);
         paused = false;
+        activateDB = true;
         // run image related code after the view was laid out
         // to have all dimensions calculated
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
+        context = this;
         dificulty = 2;
         count = 1;
         countToTimer = 0;
@@ -81,7 +80,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void onClick(View view) {
 
-                paused = true;
+
+                activateDB = true;
                 afterClickTimerCollection.get(countToTimer).cancel();
                 countToTimer++;
                 startTimer();
@@ -147,7 +147,16 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                         txtTimeGame.setText(time.toString() + " Segundos");
                         //Log.i("interval",time.toString());
                     }else{
+                        if(activateDB){
+                            long id = (long) saveScore("Puzzle#"+count, time);
+                            if(id > 0){
+                                Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
+                            }
+                        }
                         time = 0;
+
                     }
                 }
             });
@@ -375,8 +384,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     @Override
-    public void saveScore(Float timeGameSolved) {
-
+    public float saveScore(String puzzleName, float timeToSolved) {
+        long id = gamePresenter.saveScore(puzzleName, timeToSolved, context);
+        this.activateDB = false;
+        return id;
     }
 
     public void splitPuzzleImage (ImageView img){

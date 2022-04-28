@@ -1,5 +1,7 @@
 package com.example.zzler.puzzleGame;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +23,10 @@ public class PuzzleGamePresenterImpl implements IPuzzleGamePresenter {
     }
 
     @Override
-    public void saveScore(Float timeGameSolved) {
-
+    public long saveScore (String puzzleName, float timeToSolved, Context context) {
+        gameModel = new PuzzleGameModelImpl(context);
+        SQLiteDatabase db = gameModel.getWritableDatabase(); //try catch
+        return gameModel.saveScoreToBBDD(puzzleName, timeToSolved);
     }
 
     //¿? SaveScoreToBBDD ()

@@ -5,6 +5,6 @@ import android.widget.ImageView;
 public interface IPuzzleGameView {
 
     void showNextPuzzle(ImageView img);
-    void saveScore(Float timeGameSolved);
+    float saveScore(String puzzleName, float timeToSolved);
 
 }
