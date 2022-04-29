@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
+import com.example.zzler.webView.Info;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goGame (View v){
         Intent i = new Intent (this, PuzzleGameView.class);
+        startActivity(i);
+    }
+
+    public void showInfo (View v){
+        Intent i = new Intent (this, Info.class);
         startActivity(i);
     }
 }
