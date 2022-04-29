@@ -6,6 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.zzler.R;
@@ -13,6 +16,32 @@ import com.example.zzler.puzzleGame.PuzzleGameView;
 import com.example.zzler.webView.Info;
 
 public class MainActivity extends AppCompatActivity {
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_toolbar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.showInfo:
+                openWebView();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openWebView() {
+        Intent i = new Intent(this, Info.class);
+        startActivity(i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
     }
+
+
 
     public void goGame (View v){
         Intent i = new Intent (this, PuzzleGameView.class);

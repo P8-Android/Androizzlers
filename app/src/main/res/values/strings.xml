@@ -5,4 +5,5 @@
     <string name="btnGame" translatable="false">Game</string>
     <string name="txtFinish" translatable="false">Finish!</string>
     <string name="btnInfoBack" translatable="false">Volver</string>
+    <string name="info" translatable="false">Info</string>
 </resources>

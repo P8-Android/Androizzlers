@@ -17,6 +17,17 @@
     </androidx.appcompat.widget.Toolbar>
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="20dp"
+        android:background="#B8977E"
+        android:backgroundTint="#FDEFBC"
+        android:onClick="showInfo"
+        android:src="@drawable/ic_baseline_info_24" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -55,18 +66,6 @@
             android:text="@string/btnScore" />
 
     </LinearLayout>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="20dp"
-        android:background="#B8977E"
-        android:backgroundTint="#FDEFBC"
-        android:onClick="showInfo"
-        android:src="@drawable/ic_baseline_info_24" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
