@@ -21,7 +21,7 @@ public class Info extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         myWebView = (WebView) findViewById(R.id.infoView);
-        myWebView.loadUrl("https://uoc.edu");
+        myWebView.loadUrl("http://p8info.arrojorge.pro");
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         WebViewClient webClient  = new WebViewClient();
@@ -29,8 +29,4 @@ public class Info extends AppCompatActivity {
 
     }
 
-    public void backInfo(View v){
-        Intent i = new Intent (this, MainActivity.class);
-        startActivity(i);
-    }
 }

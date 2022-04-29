@@ -10,13 +10,6 @@
     <WebView
         android:id="@+id/infoView"
         android:layout_width="match_parent"
-        android:layout_height="835dp" />
+        android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btnInfoBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:onClick="backInfo"
-        android:text="@string/btnInfoBack" />
 </LinearLayout>
