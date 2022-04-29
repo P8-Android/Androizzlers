@@ -8,9 +8,11 @@
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2605" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_main.xml" value="0.45" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/toolbar.xml" value="0.31614583333333335" />
+        <entry key="app/src/main/res/drawable/layoutsplash.xml" value="0.1615" />
+        <entry key="app/src/main/res/drawable/splash.xml" value="0.198" />
+        <entry key="app/src/main/res/layout/act_splash.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_puzzle_game.xml" value="0.19010416666666666" />
-        <entry key="app/src/main/res/menu/menu_toolbar.xml" value="0.19010416666666666" />
       </map>
     </option>
   </component>
