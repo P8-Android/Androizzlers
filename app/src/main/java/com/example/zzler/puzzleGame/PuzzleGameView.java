@@ -4,6 +4,7 @@ package com.example.zzler.puzzleGame;
 import static java.lang.Math.abs;
 import com.example.zzler.main.MainActivity;
 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
 
@@ -57,6 +59,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
+        Toolbar toolbar = findViewById(R.id.toolbarGame);
+        toolbar.setTitle("Puzzle");
+        setSupportActionBar(toolbar);
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);

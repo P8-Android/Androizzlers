@@ -1,5 +1,6 @@
 package com.example.zzler.main;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("Puzzle");
         setSupportActionBar(myToolbar);
 
     }
