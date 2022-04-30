@@ -35,7 +35,7 @@
             app:srcCompat="@mipmap/imgmain" />
 
         <Button
-            android:id="@+id/bntScore"
+            android:id="@+id/btnGame"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
             android:text="@string/btnGame" />
 
         <Button
-            android:id="@+id/btnGame"
+            android:id="@+id/bntScore"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
