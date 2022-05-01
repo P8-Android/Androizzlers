@@ -55,6 +55,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
     Context context;
+    String urlImg;
 
 
     ArrayList<PuzzlePiece> pieces;
@@ -90,6 +91,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         Toolbar toolbar = findViewById(R.id.toolbarGame);
         toolbar.setTitle("Puzzle");
         setSupportActionBar(toolbar);
+        urlImg = getIntent().getStringExtra("img");
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
@@ -134,7 +136,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
-                        pieces = splitImage(dificulty+count);
+                        pieces = splitImage(dificulty+count,Integer.parseInt(urlImg));
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener();
                         for(PuzzlePiece piece : pieces) {
@@ -152,7 +154,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(dificulty);
+                pieces = splitImage(dificulty,2);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
@@ -217,7 +219,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
-    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty) {
+    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) {
         int rows = dificulty;
         int cols = dificulty;
         int piecesNumber = rows*cols;
@@ -228,7 +230,34 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         // Get the scaled bitmap of the source image
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.photo);
+        int img;
+        switch (posImg){
+            case 1:
+                img =  R.drawable.img1;
+                break;
+            case 2:
+                img =  R.drawable.img2;
+                break;
+            case 3:
+                img =  R.drawable.img3;
+                break;
+            case 4:
+                img =  R.drawable.img4;
+                break;
+            case 5:
+                img =  R.drawable.img5;
+                break;
+            case 6:
+                img =  R.drawable.img6;
+                break;
+            case 7:
+                img =  R.drawable.img7;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + posImg);
+        }
+        
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), img);
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];
