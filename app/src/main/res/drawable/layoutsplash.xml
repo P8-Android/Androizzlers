@@ -4,6 +4,7 @@
         android:drawable="@drawable/splash"/>
     <item>
         <bitmap android:gravity="center"
-            android:src="@drawable/photo"/>
+            android:src="@drawable/splash"/>
     </item>
+
 </layer-list>
