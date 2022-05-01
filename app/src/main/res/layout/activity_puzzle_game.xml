@@ -102,14 +102,15 @@
         android:id="@+id/txtFinish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/chewy"
         android:text="@string/txtFinish"
+        android:textColor="@android:color/white"
         android:textSize="30dp"
         android:visibility="gone"
-        android:fontFamily="@font/chewy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
 
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

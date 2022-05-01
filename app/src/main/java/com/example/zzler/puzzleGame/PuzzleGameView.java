@@ -56,7 +56,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     boolean activateDB;
     Context context;
     String urlImg;
-
+    ImageView imageView;
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -96,7 +96,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
-        ImageView imageView = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
         paused = false;
         activateDB = true;
         // run image related code after the view was laid out
@@ -154,6 +154,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
+
                 pieces = splitImage(dificulty,2);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
@@ -224,7 +225,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         int cols = dificulty;
         int piecesNumber = rows*cols;
 
-        ImageView imageView = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
@@ -256,8 +257,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             default:
                 throw new IllegalStateException("Unexpected value: " + posImg);
         }
-        
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), img);
+        imageView.setImageDrawable(getResources().getDrawable(img));
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];
