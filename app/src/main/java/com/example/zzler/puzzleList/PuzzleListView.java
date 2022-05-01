@@ -39,15 +39,17 @@ public class PuzzleListView extends AppCompatActivity {
         imgV = null;
         gridView  =  findViewById(R.id.grid_image_puzzle);
         ImageAdapter gridAdapter =(new ImageAdapter(this));
-        gridView.setAdapter(gridAdapter);
+
 
         gridView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 View imgView = gridAdapter.getItem();
-                i.putExtra("img",pos);
+                i.putExtra("pos",pos);
                 startActivity(i);
             }
         });
+
+        gridView.setAdapter(gridAdapter);
     }
 
 

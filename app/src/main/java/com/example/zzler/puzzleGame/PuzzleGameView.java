@@ -55,7 +55,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
     Context context;
-    String urlImg;
+    Integer urlImg;
     ImageView imageView;
 
     ArrayList<PuzzlePiece> pieces;
@@ -91,7 +91,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         Toolbar toolbar = findViewById(R.id.toolbarGame);
         toolbar.setTitle("Puzzle");
         setSupportActionBar(toolbar);
-        urlImg = getIntent().getStringExtra("img");
+        urlImg = getIntent().getIntExtra("pos",1);
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.timeGame);
@@ -136,7 +136,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
-                        pieces = splitImage(dificulty+count,Integer.parseInt(urlImg));
+                        pieces = splitImage(dificulty+count,urlImg);
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener();
                         for(PuzzlePiece piece : pieces) {
@@ -155,7 +155,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void run() {
 
-                pieces = splitImage(dificulty,2);
+                pieces = splitImage(dificulty,urlImg);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
