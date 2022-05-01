@@ -24,6 +24,9 @@
                 </intent-filter>
         </activity>
         <activity
+            android:name=".puzzleList.PuzzleListView"
+            android:exported="false" />
+        <activity
             android:name=".puzzleGame.PuzzleGameView"
             android:exported="false" />
         <activity

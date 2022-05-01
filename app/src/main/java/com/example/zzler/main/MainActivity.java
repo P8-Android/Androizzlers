@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
+import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.webView.Info;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void goGame (View v){
-        Intent i = new Intent (this, PuzzleGameView.class);
+        Intent i = new Intent (this, PuzzleListView.class);
         startActivity(i);
     }
 
