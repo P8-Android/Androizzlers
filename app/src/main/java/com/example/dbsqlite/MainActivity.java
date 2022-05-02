@@ -2,6 +2,7 @@ package com.example.dbsqlite;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnCreateDB;
     Button btnInsertDB;
+    Button btnListDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btnCreateDB = findViewById((R.id.btnCreateDB));
         btnInsertDB = findViewById((R.id.btnInsertDB));
+        btnListDB = findViewById(R.id.btnListDB);
 
         btnCreateDB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,5 +54,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        /* btnListDB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                DbScore dbScore = new DbScore(ListDbActivity.this);
+            }
+        }; */
     }
+    /*private void listDbActivity(){
+        Intent intent = new Intent(this, ListDbActivity.class);
+        startActivity(intent);
+    }*/
 }

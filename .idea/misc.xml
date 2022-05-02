@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lino/AndroidStudioProjects/dbsqlite/app/src/main/res/layout/activity_list_db.xml" value="0.1" />
         <entry key="..\:/Users/Lino/AndroidStudioProjects/dbsqlite/app/src/main/res/layout/activity_main.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/Lino/AndroidStudioProjects/dbsqlite/app/src/main/res/layout/item_list_db.xml" value="0.10185185185185185" />
       </map>
     </option>
   </component>

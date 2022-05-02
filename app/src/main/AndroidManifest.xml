@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dbsqlite">
         <activity
+            android:name=".ListDbActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
