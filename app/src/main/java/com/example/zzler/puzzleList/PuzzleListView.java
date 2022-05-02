@@ -44,8 +44,11 @@ public class PuzzleListView extends AppCompatActivity {
         gridView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 View imgView = gridAdapter.getItem();
-                i.putExtra("pos",pos);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pos",pos);
+                i.putExtras(bundle);
                 startActivity(i);
+                finish();
             }
         });
 

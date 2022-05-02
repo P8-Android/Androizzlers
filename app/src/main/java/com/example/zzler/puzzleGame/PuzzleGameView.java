@@ -19,6 +19,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -57,6 +58,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     Context context;
     Integer urlImg;
     ImageView imageView;
+    Runnable runnable;
 
     ArrayList<PuzzlePiece> pieces;
 
@@ -86,8 +88,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle_game);
+
+
         Toolbar toolbar = findViewById(R.id.toolbarGame);
         toolbar.setTitle("Puzzle");
         setSupportActionBar(toolbar);
@@ -111,6 +116,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
+        startTimer();
+
+
+
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -118,6 +127,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
                 activateDB = true;
                 afterClickTimerCollection.get(countToTimer).cancel();
+                paused = true;
                 countToTimer++;
                 startTimer();
                 count++;
@@ -151,10 +161,12 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
         });
 
+
+
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                startTimer();
+
                 pieces = splitImage(dificulty,urlImg);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
@@ -175,13 +187,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             Integer time = 0;
 
             @Override
-            public void run(){ runOnUiThread (new Runnable() {
+            public void run(){ runOnUiThread (runnable = new Runnable() {
                 @Override
                 public void run() {
                     if(!paused){
                         time++;
                         txtTimeGame.setText(time.toString() + " Segundos");
-                        //Log.i("interval",time.toString());
+                        Log.i("interval",time.toString());
                     }else{
                         if(activateDB){
                             long id = (long) saveScore("Puzzle#"+count, time);
@@ -193,11 +205,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                         }
                         time = 0;
 
+
                     }
                 }
             });
             }
         },0,1000);
+
+
     }
 
 
@@ -206,6 +221,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
         afterClickTimerCollection.get(countToTimer).cancel();
+//        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
         txtTimeGame.setText("Tiempo final: "+timeString);
@@ -229,7 +245,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
-        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+       // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
         int img;
         switch (posImg){
