@@ -34,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
+import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private static int countToTimer;
     static TextView textFinish;
     static TextView txtTimeGame;
-    static Timer myTimer = new Timer();
     static boolean paused;
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
@@ -94,7 +94,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         urlImg = getIntent().getIntExtra("pos",1);
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
-        txtTimeGame = findViewById(R.id.timeGame);
+        txtTimeGame = findViewById(R.id.txtTimeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
         imageView = findViewById(R.id.imageView);
         paused = false;
@@ -108,7 +108,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         countToTimer = 0;
         afterClickTimerCollection = new ArrayList<>();
 
-        startTimer();
+
 
 
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
@@ -154,7 +154,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-
+                startTimer();
                 pieces = splitImage(dificulty,urlImg);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
@@ -205,7 +205,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
-        afterClickTimerCollection.get(countToTimer).purge();
+        afterClickTimerCollection.get(countToTimer).cancel();
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
         txtTimeGame.setText("Tiempo final: "+timeString);
@@ -435,7 +435,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     public void goHome(View v){
         paused = true;
         dificulty = 2;
-        myTimer.purge();
         finish();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
