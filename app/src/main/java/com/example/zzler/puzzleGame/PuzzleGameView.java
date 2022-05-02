@@ -233,25 +233,25 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         //Bitmap bitmap = drawable.getBitmap(); BUG
         int img;
         switch (posImg){
-            case 1:
+            case 0:
                 img =  R.drawable.img1;
                 break;
-            case 2:
+            case 1:
                 img =  R.drawable.img2;
                 break;
-            case 3:
+            case 2:
                 img =  R.drawable.img3;
                 break;
-            case 4:
+            case 3:
                 img =  R.drawable.img4;
                 break;
-            case 5:
+            case 4:
                 img =  R.drawable.img5;
                 break;
-            case 6:
+            case 5:
                 img =  R.drawable.img6;
                 break;
-            case 7:
+            case 6:
                 img =  R.drawable.img7;
                 break;
             default:
