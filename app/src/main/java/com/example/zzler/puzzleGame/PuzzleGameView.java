@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -324,6 +325,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         int rows = dificulty;
         int cols = dificulty;
         int piecesNumber = rows*cols;
+        Bitmap bitmap;
 
         imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
@@ -358,8 +360,21 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 throw new IllegalStateException("Unexpected value: " + posImg);
         }
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), img);
-        imageView.setImageDrawable(getResources().getDrawable(img));
+
+
+        if (getIntent().getParcelableExtra("photo")!=null){
+            bitmap = getIntent().getParcelableExtra("photo");
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setImageDrawable(d);
+            //imageView.setImageBitmap(bitmap);
+        }else{
+            bitmap = BitmapFactory.decodeResource(getResources(), img);
+            imageView.setImageDrawable(getResources().getDrawable(img));
+        }
+
+
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];

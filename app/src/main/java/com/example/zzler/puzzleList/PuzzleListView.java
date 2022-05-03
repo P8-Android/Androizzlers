@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -81,7 +82,12 @@ public class PuzzleListView extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            imgV.setImageBitmap(imageBitmap);
+            Intent in = new Intent(this, PuzzleGameView.class);
+            in.setType("image/jpeg");
+            in.putExtra("photo", imageBitmap);
+            startActivity(in);
+
+            //imgV.setImageBitmap(imageBitmap);
 
 
            // imageView.setImageBitmap(imageBitmap);
