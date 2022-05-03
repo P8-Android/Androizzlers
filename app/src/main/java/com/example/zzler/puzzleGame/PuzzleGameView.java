@@ -6,6 +6,7 @@ import com.example.zzler.main.MainActivity;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,12 +19,16 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,13 +36,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -62,7 +70,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     ImageView imageView;
     Runnable runnable;
 
+
     ArrayList<PuzzlePiece> pieces;
+
+    //Producto2
+    public MediaPlayer mediaPlayer;
+    private Uri urlSong;
+    public SwitchCompat aSwitch;
+    private Button btnSelectSong;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,6 +103,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         startActivity(i);
     }
 
+    private void openFile(View v){
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -106,6 +125,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView = findViewById(R.id.imageView);
         paused = false;
         activateDB = true;
+
         // run image related code after the view was laid out
         // to have all dimensions calculated
         ImageButton btnUpLevel = findViewById(R.id.btnUpLevel);
@@ -116,10 +136,30 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         afterClickTimerCollection = new ArrayList<>();
 
 
+        //Producto2
+        aSwitch = findViewById(R.id.turnMusic);
+        btnSelectSong = findViewById(R.id.selectSong);
+        int urlSongFirst = R.raw.officialsong;
+        mediaPlayer = MediaPlayer.create(this,urlSongFirst);
+        mediaPlayer.start();
+        aSwitch.setChecked(true);
+
+        //
+
+
 
 
         startTimer();
-
+        btnSelectSong.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                final int PICK_MP3_FILE = 2;
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("audio/*");
+                startActivityForResult(intent, PICK_MP3_FILE);
+            }
+        });
 
 
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
@@ -177,6 +217,49 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             }
         });
 
+
+        turnMusic();
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                urlSong = uri;
+                if (urlSong!=null){
+                    mediaPlayer.stop();
+                    mediaPlayer = MediaPlayer.create(this,urlSong);
+                    mediaPlayer.start();
+                }
+                // Perform operations on the document using its URI.
+            }
+        }
+    }
+
+    private void turnMusic() {
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b)
+                    if(mediaPlayer.isPlaying()){
+                        mediaPlayer.pause();
+                    }
+                if (b){
+                    if(!mediaPlayer.isPlaying()){
+                        mediaPlayer.start();
+                    }
+                }
+            }
+        });
     }
 
 

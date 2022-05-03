@@ -2,14 +2,19 @@ package com.example.zzler.main;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
@@ -17,6 +22,7 @@ import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.webView.Info;
 
 public class MainActivity extends AppCompatActivity {
+
 
 
 
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.showInfo:
                 openWebView();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -53,7 +60,13 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitle("Puzzle");
         setSupportActionBar(myToolbar);
 
+
+
+
+
     }
+
+
 
 
 
