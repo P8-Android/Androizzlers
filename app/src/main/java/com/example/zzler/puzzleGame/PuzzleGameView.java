@@ -149,7 +149,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
-        startTimer();
+
         btnSelectSong.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -217,7 +217,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             }
         });
 
-
+        startTimer();
         turnMusic();
 
 
