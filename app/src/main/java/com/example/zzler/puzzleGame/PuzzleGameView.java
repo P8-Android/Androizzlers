@@ -39,6 +39,8 @@ import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -166,7 +168,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-
                 pieces = splitImage(dificulty,urlImg);
                 TouchListener touchListener = new TouchListener();
                 for(PuzzlePiece piece : pieces) {
@@ -400,6 +401,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             }
             yCoord += pieceHeight;
         }
+
+        Collections.shuffle(pieces);
 
         return pieces;
     }
