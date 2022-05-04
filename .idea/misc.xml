@@ -6,7 +6,15 @@
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2605" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2605" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2605" />
-        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_main.xml" value="0.45" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_list_db.xml" value="0.16261398176291794" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_puzzle_game.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_puzzle_list.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_puzzle_score.xml" value="0.33" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/activity_score.xml" value="0.3211050724637681" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/item_list_db.xml" value="0.334375" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/item_puzzle_score.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/puzzle_list.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/layout/toolbar.xml" value="0.31614583333333335" />
         <entry key="app/src/main/res/drawable/layoutsplash.xml" value="0.1615" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.198" />

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    android:background="@color/primaryColor"
+    android:id="@+id/item_score_list_item">
+
+
+    <TextView
+        android:id="@+id/puzzle_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="Player"
+        app:layout_constraintBottom_toTopOf="@+id/stars_score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.728">
+
+    </TextView>
+
+    <ImageView
+        android:id="@+id/stars_score"
+        android:layout_width="20dp"
+        android:layout_height="200dp"
+        android:layout_gravity="top"
+        android:progressTint="#FFEB3B"
+        android:src="@drawable/star"
+        app:layout_constraintBottom_toTopOf="@+id/image_time_score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/image_time_score"
+        android:layout_width="46dp"
+        android:layout_height="48dp"
+        android:src="@drawable/sandclock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.603">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/text_time_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60sec"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_time_score"
+        app:layout_constraintVertical_bias="0.145">
+
+    </TextView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

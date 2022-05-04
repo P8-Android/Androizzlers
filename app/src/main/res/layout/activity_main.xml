@@ -28,6 +28,7 @@
         android:onClick="showInfo"
         android:src="@drawable/ic_baseline_info_24" />
 
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -38,35 +39,47 @@
 
         <ImageView
             android:id="@+id/imgMain"
-            android:layout_width="386dp"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/iconmainpuzzle"
             android:translationX="10dp"
-            android:translationY="95dp"
-            app:srcCompat="@mipmap/imgmain" />
+            android:translationY="10dp"
+            android:layout_marginTop="50dp">
+
+        </ImageView>
+
+        <EditText
+            android:id="@+id/name_player_edtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp">
+        </EditText>
+
+
+        <Button
+            android:id="@+id/bntGame"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-25dp"
+            android:backgroundTint="#FFD3BCBC"
+            android:fontFamily="@font/chewy"
+            android:onClick="goGame"
+            android:text="@string/btnGame" />
 
         <Button
             android:id="@+id/bntScore"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="200dp"
             android:backgroundTint="#FFD3BCBC"
             android:fontFamily="@font/chewy"
-            android:text="@string/btnGame"
-            android:onClick="goGame"/>
-
-        <Button
-            android:id="@+id/btnGame"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="#FFD3BCBC"
-            android:fontFamily="@font/chewy"
+            android:onClick="puzzleScore"
             android:text="@string/btnScore" />
 
     </LinearLayout>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

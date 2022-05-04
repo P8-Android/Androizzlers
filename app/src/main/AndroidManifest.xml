@@ -35,6 +35,9 @@
         <activity
             android:name=".main.MainActivity"
             android:exported="true"/>
+        <activity android:name=".score.ScoreView">
+
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"
