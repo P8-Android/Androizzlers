@@ -3,16 +3,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -25,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.net.URI;
 
 
 public class PuzzleListView extends AppCompatActivity {
@@ -33,6 +30,7 @@ public class PuzzleListView extends AppCompatActivity {
     private GridView gridView;
     ImageView imgV;
     FloatingActionButton cameraButton;
+    FloatingActionButton galleryButton;
 
 
     @Override
@@ -45,6 +43,7 @@ public class PuzzleListView extends AppCompatActivity {
         Intent i = new Intent(this, PuzzleGameView.class);
 
         cameraButton = findViewById(R.id.cameraButton);
+        galleryButton = findViewById(R.id.galleryButton);
 
         imgV = null;
         gridView  =  findViewById(R.id.grid_image_puzzle);
@@ -73,6 +72,17 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });
 
+        galleryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+
+                startActivityForResult(intent, 9); //9 para diferenciar photo de camera de photo de galeria
+
+            }
+        });
+
     }
 
     @Override
@@ -86,11 +96,15 @@ public class PuzzleListView extends AppCompatActivity {
             in.setType("image/jpeg");
             in.putExtra("photo", imageBitmap);
             startActivity(in);
+        }
+        if (requestCode == 9 && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            //URI imageBitmap = (URI) extras.get("photoGallery");
 
-            //imgV.setImageBitmap(imageBitmap);
-
-
-           // imageView.setImageBitmap(imageBitmap);
+            Intent in = new Intent(this, PuzzleGameView.class);
+            in.setType("image/*");
+            in.putExtra("photoGallery", uri);
+            startActivity(in);
         }
     }
 

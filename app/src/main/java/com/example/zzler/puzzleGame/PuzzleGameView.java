@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +47,7 @@ import com.example.zzler.R;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,7 +196,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
-                        pieces = splitImage(dificulty+count,urlImg);
+                        try {
+                            pieces = splitImage(dificulty+count,urlImg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                         for(PuzzlePiece piece : pieces) {
@@ -214,7 +220,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(dificulty,urlImg);
+                try {
+                    pieces = splitImage(dificulty,urlImg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
@@ -326,7 +336,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
-    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) {
+    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) throws IOException {
         int rows = dificulty;
         int cols = dificulty;
         int piecesNumber = rows*cols;
@@ -374,6 +384,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.setImageDrawable(d);
             //imageView.setImageBitmap(bitmap);
+        }else if(getIntent().getParcelableExtra("photoGallery")!=null){
+            //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
+            Uri uri = getIntent().getParcelableExtra("photoGallery");
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setImageDrawable(d);
         }else{
             bitmap = BitmapFactory.decodeResource(getResources(), img);
             imageView.setImageDrawable(getResources().getDrawable(img));
