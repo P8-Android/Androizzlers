@@ -79,6 +79,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Uri urlSong;
     public SwitchCompat aSwitch;
     private Button btnSelectSong;
+    private Context c;
+    private MusicManager musicManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,6 +120,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         Toolbar toolbar = findViewById(R.id.toolbarGame);
         toolbar.setTitle("Puzzle");
         setSupportActionBar(toolbar);
+
         urlImg = getIntent().getIntExtra("pos",1);
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
@@ -138,12 +141,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
         //Producto2
+        c = this;
         aSwitch = findViewById(R.id.turnMusic);
         btnSelectSong = findViewById(R.id.selectSong);
         int urlSongFirst = R.raw.officialsong;
         mediaPlayer = MediaPlayer.create(this,urlSongFirst);
         mediaPlayer.start();
         aSwitch.setChecked(true);
+        musicManager = new MusicManager(c);
 
         //
 
@@ -191,7 +196,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                         pieces.removeAll(pieces);
                         pieces = splitImage(dificulty+count,urlImg);
                         dificulty = dificulty + count;
-                        TouchListener touchListener = new TouchListener();
+                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
@@ -210,7 +215,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void run() {
                 pieces = splitImage(dificulty,urlImg);
-                TouchListener touchListener = new TouchListener();
+                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
