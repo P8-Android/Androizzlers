@@ -15,29 +15,7 @@ public class ScoreView extends AppCompatActivity {
 
     private ArrayList<ScoreView> scoreList;
     private RecyclerView recyclerViewScore;
-    private SQLiteOpenHelper conn;
-    private DbHelper dbHelper;
-    public int id;
-    private String puzzleName;
-    private float scoreTime;
-
-
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "zzlerDB.db";
-    public static final String TABLE_NAME = "t_score";
-
-
-    public ScoreView() {
-
-    }
-
-    public ScoreView(String puzzleName, float scoreTime) {
-        this.puzzleName = puzzleName;
-        this.scoreTime = scoreTime;
-
-    }
-
-
+    DbHelper dbHelper = new DbHelper(ScoreView.this);
 
 
     @Override
@@ -50,42 +28,14 @@ public class ScoreView extends AppCompatActivity {
 
         recyclerViewScore = (RecyclerView) findViewById(R.id.recycler_list_score);
         recyclerViewScore.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewScore.setHasFixedSize(true);
 
-
-        DbHelper dbScoreView = new DbHelper(ScoreView.this, DATABASE_NAME, null,1);
-        scoreList = new ArrayList<>();
-
-
-        ScoreListAdapter adapter = new ScoreListAdapter(dbScoreView.getScoreFromBBDD());
+        ScoreListAdapter adapter = new ScoreListAdapter(ScoreView.this, dbHelper.getScoreFromBBDD());
         recyclerViewScore.setAdapter(adapter);
 
 
 
     }
 
-
-    public String getPuzzleName() {
-        return puzzleName;
-    }
-
-    public void setPuzzleName(String puzzleName) {
-        this.puzzleName = puzzleName;
-    }
-
-    public float getScoreTime() {
-        return scoreTime;
-    }
-
-    public void setScoreTime(float scoreTime) {
-        this.scoreTime = scoreTime;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 

@@ -1,70 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerVertical="true"
-    android:background="@color/primaryColor"
-    android:id="@+id/item_score_list_item">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/primaryLightColor"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/sand_clock"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/app_name"
+            android:padding="5dp"
+            android:src="@drawable/sandclock" />
+
+        <TextView
+            android:id="@+id/puzzle_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/sand_clock"
+            android:text="Puzzle Name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_time_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/puzzle_name"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/sand_clock"
+            android:drawablePadding="2dp"
+            android:text="60 sec"
+            app:drawableStartCompat="@drawable/star" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/puzzle_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:text="Player"
-        app:layout_constraintBottom_toTopOf="@+id/stars_score"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.728">
-
-    </TextView>
-
-    <ImageView
-        android:id="@+id/stars_score"
-        android:layout_width="20dp"
-        android:layout_height="200dp"
-        android:layout_gravity="top"
-        android:progressTint="#FFEB3B"
-        android:src="@drawable/star"
-        app:layout_constraintBottom_toTopOf="@+id/image_time_score"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/image_time_score"
-        android:layout_width="46dp"
-        android:layout_height="48dp"
-        android:src="@drawable/sandclock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.603">
-
-    </ImageView>
-
-    <TextView
-        android:id="@+id/text_time_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="60sec"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_time_score"
-        app:layout_constraintVertical_bias="0.145">
-
-    </TextView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+

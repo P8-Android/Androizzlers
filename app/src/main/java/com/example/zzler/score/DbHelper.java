@@ -11,9 +11,10 @@ import java.util.ArrayList;
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "zzlerBD.db";
+    private static final String DATABASE_NAME = "zzlerDB.db";
     public static final String TABLE_NAME = "t_score";
     private Context context;
+    private ScoreView scoreView;
 
     public DbHelper (Context context){
         super(context, DATABASE_NAME, null,1);
@@ -38,33 +39,25 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<ScoreView> getScoreFromBBDD () {
+    public ArrayList<Score> getScoreFromBBDD () {
 
-        DbHelper dbHelper = new DbHelper(context, DATABASE_NAME, null,1);
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        ArrayList<ScoreView> scoreList = new ArrayList<>();
-
-        ScoreView scoreView = null;
+        ArrayList<Score> scoreList = new ArrayList<Score>();
         Cursor cursor = null;
 
 
         cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
-        if (cursor.moveToFirst()) {
-
+        if (cursor.moveToPosition(1)) {
             do {
-                scoreView.setPuzzleName(cursor.getString(1));
-                scoreView.setScoreTime(cursor.getFloat(2));
-                scoreList.add(scoreView);
-
+                scoreList.add(new Score(cursor.getString(1),cursor.getFloat(2)));
             }while (cursor.moveToNext());
 
         }
 
         cursor.close();
-        dbHelper.close();
+        db.close();
 
         return scoreList;
 
