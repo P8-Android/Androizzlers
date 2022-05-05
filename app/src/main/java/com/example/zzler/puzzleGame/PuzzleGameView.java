@@ -180,7 +180,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
 
-    protected void startTimer() {
+protected void startTimer() {
 
         afterClickTimerCollection.add(new Timer());
         afterClickTimerCollection.get(countToTimer).scheduleAtFixedRate(new TimerTask(){
@@ -205,9 +205,15 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                             }
                         }
                         time = 0;
+                        stop();
 
 
                     }
+
+                }
+
+                private void stop() {
+                    afterClickTimerCollection.get(countToTimer).cancel();
                 }
             });
             }
@@ -221,7 +227,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
-        afterClickTimerCollection.get(countToTimer).cancel();
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
