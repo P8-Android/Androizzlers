@@ -2,12 +2,18 @@ package com.example.zzler.puzzleGame;
 
 
 import android.content.ContentValues;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.widget.ImageView;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+import java.util.Date;
+import java.util.Locale;
 
 
 public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGameModel {
@@ -29,7 +35,9 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "puzzleName TEXT NOT NULL," +
-                "timeToSolved REAL NOT NULL)");
+                "timeToSolved REAL NOT NULL," +
+                "fecha TEXT NOT NULL" + ")"
+                );
     }
 
     @Override
@@ -47,9 +55,15 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public long saveScoreToBBDD(String puzzleName, float timeToSolved) {
         long id = 0;
+        SimpleDateFormat dateFormmat = new SimpleDateFormat(
+
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        String dateString = dateFormmat.format(date);
 
         try {
             PuzzleGameModelImpl dbHelper = new PuzzleGameModelImpl(context);
@@ -58,6 +72,7 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
             ContentValues values = new ContentValues();
             values.put("puzzleName", puzzleName);
             values.put("timeToSolved", timeToSolved);
+            values.put("fecha", dateString);
 
             id = db.insert(TABLE_NAME, null, values);
         } catch (Exception ex) {
