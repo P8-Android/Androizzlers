@@ -6,6 +6,7 @@ import com.example.zzler.main.MainActivity;
 
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +41,7 @@ import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Timer;
@@ -86,6 +89,34 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private void openWebView() {
         Intent i = new Intent(this, Info.class);
         startActivity(i);
+    }
+
+    @Override
+    public void saveScoreInCalendar (String puzzleName, float timeToSolved) {
+        int timeTo=(int) timeToSolved;
+        String score= " Score: "+(long) timeTo +" seg";
+        Log.i("SAVESCOREINCALENDAR","Starts to save score in mobile calendar");
+        Calendar cal = Calendar.getInstance();
+        Calendar beg = Calendar.getInstance();
+        beg.add(Calendar.SECOND, - timeTo);
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
+        beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beg.getTimeInMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis())
+                .putExtra(CalendarContract.Events.TITLE, puzzleName +" " + score)
+                .putExtra(CalendarContract.Events.DESCRIPTION, score);
+        try
+        {
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException ErrVar)
+        {
+            Log.i("SAVESCOREINCALENDAR","It is neccesary install Calender App");
+            Toast.makeText(this, "It is neccesary install Calender App", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -204,6 +235,7 @@ protected void startTimer() {
                                 Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
                             }
                         }
+                        saveScoreInCalendar ("Puzzle#"+count, time);
                         time = 0;
                         stop();
 
@@ -230,6 +262,7 @@ protected void startTimer() {
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
+
         txtTimeGame.setText("Tiempo final: "+timeString);
         return timeString;
 
