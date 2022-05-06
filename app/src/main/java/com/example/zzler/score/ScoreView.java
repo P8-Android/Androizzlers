@@ -18,6 +18,7 @@ public class ScoreView extends AppCompatActivity {
     private RecyclerView recyclerViewScore;
     DbHelper dbHelper = new DbHelper(ScoreView.this);
 
+
     private String namePlayer;
     private String scorePuzzle;
     private Integer levelPuzzle;

@@ -22,14 +22,14 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder {
 
-        TextView puzzleName, scoreTime;
+        TextView puzzleName, scoreTime, textTime;
 
         public ScoreViewHolder(@NonNull View itemView) {
             super(itemView);
 
             puzzleName = (TextView) itemView.findViewById(R.id.puzzle_name);
             scoreTime = (TextView) itemView.findViewById(R.id.text_time_score);
-
+            textTime = (TextView)  itemView.findViewById(R.id.text_time);
         }
     }
 
@@ -50,6 +50,7 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
 
         holder.puzzleName.setText(String.valueOf(score.getPuzzleName()));
         holder.scoreTime.setText(String.valueOf(score.getScoreTime()));
+        holder.textTime.setText(String.valueOf(score.getDate()));
     }
 
 

@@ -37,6 +37,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/text_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_time_score"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="1dp"
+            android:layout_toEndOf="@id/sand_clock"
+            android:drawablePadding="2dp"
+            android:text="Fecha" />
+
+        <TextView
             android:id="@+id/text_time_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
