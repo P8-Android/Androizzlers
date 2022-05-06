@@ -84,6 +84,21 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Context c;
     private MusicManager musicManager;
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        afterClickTimerCollection.get(countToTimer).cancel();
+        finish();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -304,9 +319,15 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                             }
                         }
                         time = 0;
+                        stop();
 
 
                     }
+
+                }
+
+                private void stop() {
+                    afterClickTimerCollection.get(countToTimer).cancel();
                 }
             });
             }
@@ -320,7 +341,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
         paused = true;
-        afterClickTimerCollection.get(countToTimer).cancel();
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt

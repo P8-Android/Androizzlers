@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 public class ScoreView  implements IScoreView{
-
     private String namePlayer;
     private String scorePuzzle;
     private Integer levelPuzzle;
