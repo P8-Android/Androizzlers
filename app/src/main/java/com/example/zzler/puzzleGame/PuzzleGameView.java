@@ -44,14 +44,12 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
-import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -83,6 +81,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Button btnSelectSong;
     private Context c;
     private MusicManager musicManager;
+    private HashMap<Integer, Boolean> mapImgToSplit;
 
 
     @Override
@@ -166,6 +165,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         mediaPlayer.start();
         aSwitch.setChecked(true);
         musicManager = new MusicManager(c);
+        mapImg = new MapImg();
+        mapImgToSplit = mapImg.mapImgToSplit;
 
         //
 
@@ -354,8 +355,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         return (int) 1/Integer.parseInt(timeString);
     }
 
+MapImg mapImg;
 
-
+    @SuppressLint("NewApi")
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) throws IOException {
         int rows = dificulty;
         int cols = dificulty;
@@ -365,37 +367,30 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
+/*
+        if (posImg == 0)
+            posImg++;
+        else if (posImg<=3)
+            posImg++;
+        else if(posImg>5)
+            posImg--;
+        else if (posImg == 6)
+            posImg=0;
+
+ */
+
         // Get the scaled bitmap of the source image
        // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
-        int img;
-        switch (posImg){
-            case 0:
-                img =  R.drawable.img1;
-                break;
-            case 1:
-                img =  R.drawable.img2;
-                break;
-            case 2:
-                img =  R.drawable.img3;
-                break;
-            case 3:
-                img =  R.drawable.img4;
-                break;
-            case 4:
-                img =  R.drawable.img5;
-                break;
-            case 5:
-                img =  R.drawable.img6;
-                break;
-            case 6:
-                img =  R.drawable.img7;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + posImg);
-        }
+        int img = 0;
+        do{
+            img = getImgToSplit(posImg);
 
+            Log.i("Boooolean",mapImgToSplit.get(img).toString());
+        }while(mapImgToSplit.get(img)==false);
+        mapImgToSplit.replace(img,false);
 
+        //mapImgToSplit.put(img,false);
 
         if (getIntent().getParcelableExtra("photo")!=null){
             bitmap = getIntent().getParcelableExtra("photo");
@@ -547,6 +542,47 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
         return pieces;
     }
+
+    @SuppressLint("NewApi")
+    private int getImgToSplit(Integer posImg) {
+        int img;
+            switch (posImg){
+                case 0:
+                    img =  R.drawable.img1;
+                    this.urlImg++;
+                    break;
+                case 1:
+                    img =  R.drawable.img2;
+                    this.urlImg++;
+                    break;
+                case 2:
+                    img =  R.drawable.img3;
+                    this.urlImg++;
+                    break;
+                case 3:
+                    img =  R.drawable.img4;
+                    this.urlImg++;
+                    break;
+                case 4:
+                    img =  R.drawable.img5;
+                    this.urlImg++;
+                    break;
+                case 5:
+                    img =  R.drawable.img6;
+                    this.urlImg++;
+                    break;
+                case 6:
+                    img =  R.drawable.img7;
+                    this.urlImg = 0;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + posImg);
+            }
+
+        return img;
+
+    }
+
 
     private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
