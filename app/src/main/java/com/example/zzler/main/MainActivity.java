@@ -24,14 +24,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity{
 
-    Button btnScore;
-    Button btnGame;
-    FloatingActionButton infoGame;
-    EditText namePlayer;
-    SQLiteOpenHelper dbHelper;
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -61,9 +53,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("Puzzle");
-        setSupportActionBar(myToolbar);
+        Toolbar toolbarMain = findViewById(R.id.toolbar_main);
+        toolbarMain.setTitle("Puzzle Game");
+        setSupportActionBar(toolbarMain);
 
     }
 

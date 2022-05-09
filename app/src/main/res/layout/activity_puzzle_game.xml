@@ -16,7 +16,7 @@
         android:elevation="4dp"
         android:theme="@style/Theme.Zzler"
         app:popupTheme="@style/Theme.Zzler"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"/>
 
     <TextView
         android:id="@+id/txtTimeGame"
@@ -24,41 +24,46 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="TextView"
+        android:fontFamily="@font/chewy"
         app:layout_constraintBottom_toTopOf="@+id/scoreStars"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnGoHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="20dp"
-        android:background="#B8977E"
-        android:backgroundTint="#FDEFBC"
+        android:elevation="10dp"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/primaryColor"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        android:tint="@color/black"
         android:onClick="goHome"
-        android:src="@drawable/ic_baseline_info_24"
+        android:src="@drawable/ic_baseline_home_24"
         app:layout_constraintEnd_toStartOf="@+id/txtTimeGame"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame"/>
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnUpLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="20dp"
         android:layout_marginTop="24dp"
-        android:background="#B8977E"
-        android:backgroundTint="#FDEFBC"
+        app:borderWidth="0dp"
+        android:tint="@color/black"
+        android:backgroundTint="@color/primaryColor"
         android:minWidth="48dp"
         android:minHeight="48dp"
+        android:elevation="10dp"
         android:onClick="upLevel"
-        android:src="@drawable/ic_baseline_info_24"
+        android:src="@drawable/ic_level_up__1_"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtTimeGame"
         app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
@@ -72,7 +77,8 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toEndOf="@+id/btnGoHome"
         app:layout_constraintTop_toBottomOf="@+id/txtTimeGame"
-        app:srcCompat="@android:drawable/star_big_on" />
+        app:srcCompat="@android:drawable/star_big_on"
+        android:visibility="invisible"/>
 
 
     <RelativeLayout

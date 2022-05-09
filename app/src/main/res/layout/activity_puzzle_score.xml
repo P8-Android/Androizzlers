@@ -8,7 +8,7 @@
     android:background="@color/primaryColor">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
+        android:id="@+id/toolbar_game_score"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -19,14 +19,14 @@
         app:layout_constraintVertical_bias="0.0"
         app:popupTheme="@style/Theme.Zzler"
         tools:layout_editor_absoluteX="0dp">
-
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_list_score"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp">
+        android:layout_marginTop="55dp"
+        android:background="@color/white">
     </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

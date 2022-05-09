@@ -54,6 +54,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private static int countToTimer;
     static TextView textFinish;
     static TextView txtTimeGame;
+    static ImageView imageStarFinish;
     static boolean paused;
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
@@ -102,6 +103,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.txtTimeGame);
+        imageStarFinish = findViewById(R.id.scoreStars);
         final RelativeLayout layout = findViewById(R.id.layout);
         imageView = findViewById(R.id.imageView);
         paused = false;
@@ -140,6 +142,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 }
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
+
+
 
                 paused = false;
 
@@ -226,6 +230,7 @@ protected void startTimer() {
 
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
+        imageStarFinish.setVisibility(View.VISIBLE);
         paused = true;
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
