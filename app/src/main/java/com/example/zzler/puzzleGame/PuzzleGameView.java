@@ -66,6 +66,12 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     ArrayList<PuzzlePiece> pieces;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        afterClickTimerCollection.get(countToTimer).cancel();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
@@ -462,6 +468,7 @@ protected void startTimer() {
     }
 
     public void goHome(View v){
+        activateDB = false;
         paused = true;
         dificulty = 2;
         finish();
