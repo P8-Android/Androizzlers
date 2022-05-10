@@ -3,4 +3,7 @@
     <string name="main_img" translatable="false">Main_Img</string>
     <string name="btnScore" translatable="false">Score</string>
     <string name="btnGame" translatable="false">Game</string>
+    <string name="txtFinish" translatable="false">Finish!</string>
+    <string name="btnInfoBack" translatable="false">Volver</string>
+    <string name="info" translatable="false">Info</string>
 </resources>

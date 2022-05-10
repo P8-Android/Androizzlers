@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cons"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.zzler.puzzleGame.PuzzleGameView">
+    <!--  -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarGame"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/Theme.Zzler"
+        app:popupTheme="@style/Theme.Zzler"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/txtTimeGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        android:fontFamily="@font/chewy"
+        app:layout_constraintBottom_toTopOf="@+id/scoreStars"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnGoHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="20dp"
+        android:elevation="10dp"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/primaryColor"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:tint="@color/black"
+        android:onClick="goHome"
+        android:src="@drawable/ic_baseline_home_24"
+        app:layout_constraintEnd_toStartOf="@+id/txtTimeGame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnUpLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="20dp"
+        android:layout_marginTop="24dp"
+        app:borderWidth="0dp"
+        android:tint="@color/black"
+        android:backgroundTint="@color/primaryColor"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:elevation="10dp"
+        android:onClick="upLevel"
+        android:src="@drawable/ic_level_up__1_"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtTimeGame"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
+
+    <ImageView
+        android:id="@+id/scoreStars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnUpLevel"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toEndOf="@+id/btnGoHome"
+        app:layout_constraintTop_toBottomOf="@+id/txtTimeGame"
+        app:srcCompat="@android:drawable/star_big_on"
+        android:visibility="invisible"/>
+
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="175dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:foregroundGravity="center"
+            android:scaleType="centerCrop"
+            app:layout_constraintHeight="match_parent"
+            app:layout_constraintWidth="match_parent"
+            app:srcCompat="@drawable/splash" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/chewy"
+        android:text="@string/txtFinish"
+
+        android:textSize="30dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

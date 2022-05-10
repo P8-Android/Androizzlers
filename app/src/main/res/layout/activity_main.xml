@@ -6,78 +6,108 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
+        android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/primaryColor"
         android:elevation="4dp"
+        app:titleTextColor="@color/black"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Headline"
         android:theme="@style/Theme.Zzler"
         app:popupTheme="@style/Theme.Zzler">
 
     </androidx.appcompat.widget.Toolbar>
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/primaryColor"
+        android:tint="@color/black"
+        app:borderWidth="0dp"
+        android:elevation="10dp"
+        android:onClick="showInfo"
+        android:src="@drawable/ic_baseline_info_24" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#EFE8E8"
+        android:background="@color/white"
         android:orientation="vertical">
 
 
-        <ImageView
-            android:id="@+id/imgMain"
-            android:layout_width="386dp"
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:translationX="10dp"
-            android:translationY="95dp"
-            app:srcCompat="@mipmap/imgmain" />
+            android:layout_marginTop="0dp"
+            android:layout_margin="50dp"
+            app:cardElevation="10dp"
+            app:cardCornerRadius="8dp"
+            app:cardMaxElevation="10dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardBackgroundColor="@color/primaryLightColor"
+            app:cardUseCompatPadding="true"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="120dp"
+                android:layout_marginBottom="120dp"
+                android:src="@drawable/puzzle_icon">
+
+            </ImageView>
+
+            <ImageView
+
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/puzzle_game_by_androizzlers_no_background"
+                android:layout_marginLeft="-8dp"
+                android:layout_marginBottom="-50dp"
+                android:layout_gravity="bottom">
+
+            </ImageView>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/bntGame"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_style"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:fontFamily="@font/chewy"
+            android:onClick="goGame"
+            android:text="@string/btnGame" />
 
         <Button
             android:id="@+id/bntScore"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="200dp"
-            android:backgroundTint="#FFD3BCBC"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_style"
+            android:textColor="@color/black"
+            android:textSize="20dp"
             android:fontFamily="@font/chewy"
-            android:text="@string/btnGame" />
-
-        <Button
-            android:id="@+id/btnGame"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="#FFD3BCBC"
-            android:fontFamily="@font/chewy"
+            android:onClick="puzzleScore"
             android:text="@string/btnScore" />
+
+
 
     </LinearLayout>
 
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:backgroundTint="#FDEFBC"
-        android:background="#B8977E"
-        android:src="@drawable/ic_baseline_info_24"
-        android:layout_margin="20dp">
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="20dp"
-        style="@style/">
-
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
