@@ -3,17 +3,13 @@ package com.example.zzler.puzzleGame;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-
-import android.content.Context;
 import android.media.MediaPlayer;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.example.zzler.R;
 
 public class TouchListener implements View.OnTouchListener {
     private float xDelta;
@@ -22,13 +18,16 @@ public class TouchListener implements View.OnTouchListener {
     static int countToShowFinishMsg = 0;
     static String timeTotal;
 
+    boolean flagAnimation = true;
     boolean flagMusic = true;
     MediaPlayer mdDrag;
     MediaPlayer mdSuccess;
+    Animation animationPiece;
 
-    public TouchListener(MediaPlayer mdDrag, MediaPlayer mdSuccess) {
+    public TouchListener(MediaPlayer mdDrag, MediaPlayer mdSuccess, Animation animationPiece) {
         this.mdDrag = mdDrag;
         this.mdSuccess = mdSuccess;
+        this.animationPiece = animationPiece;
     }
 
     public static String getTimeTotal() {
@@ -60,6 +59,7 @@ public class TouchListener implements View.OnTouchListener {
                 if(flagMusic)
                     playMusic(mdDrag);
                 flagMusic=false;
+                flagAnimation= false;
                 lParams.leftMargin = (int) (x - xDelta);
                 lParams.topMargin = (int) (y - yDelta);
                 view.setLayoutParams(lParams);
@@ -67,6 +67,7 @@ public class TouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
                 if(!flagMusic&&mdDrag!=null)
                     mdDrag.pause();
+                    dragEffectPiece(animationPiece,piece);
                 flagMusic = true;
                 int xDiff = abs(piece.xCoord - lParams.leftMargin);
                 int yDiff = abs(piece.yCoord - lParams.topMargin);
@@ -105,6 +106,17 @@ public class TouchListener implements View.OnTouchListener {
         }
 
     }
+
+    public void dragEffectPiece(Animation animationPiece, PuzzlePiece piece) {
+
+        piece.startAnimation(animationPiece);
+
+        flagAnimation = false;
+
+    }
+
+
+
 }
 
 

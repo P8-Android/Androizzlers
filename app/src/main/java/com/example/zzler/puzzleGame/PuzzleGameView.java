@@ -2,6 +2,9 @@ package com.example.zzler.puzzleGame;
 
 
 import static java.lang.Math.abs;
+import static java.lang.Math.toRadians;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.zzler.main.MainActivity;
 
 
@@ -29,6 +32,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -68,7 +73,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     boolean activateDB;
     Context context;
     Integer urlImg;
-    ImageView imageView;
     Runnable runnable;
 
 
@@ -81,7 +85,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Button btnSelectSong;
     private Context c;
     private MusicManager musicManager;
+    private AnimationPiece animationPiece;
+    static LottieAnimationView starImageFinish;
     private HashMap<Integer, Boolean> mapImgToSplit;
+    static LottieAnimationView puzzleImageView;
+    static LottieAnimationView finishFlags;
 
 
     @Override
@@ -142,7 +150,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.txtTimeGame);
         final RelativeLayout layout = findViewById(R.id.layout);
-        imageView = findViewById(R.id.imageView);
+        puzzleImageView = findViewById(R.id.imageView);
+        starImageFinish = findViewById(R.id.scoreStars);
+        finishFlags = findViewById(R.id.finish_flags);
         paused = false;
         activateDB = true;
 
@@ -167,8 +177,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         musicManager = new MusicManager(c);
         mapImg = new MapImg();
         mapImgToSplit = mapImg.mapImgToSplit;
+        animationPiece = new AnimationPiece(c);
 
-        //
+
+
 
 
 
@@ -208,7 +220,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 paused = false;
 
 
-                imageView.post(new Runnable() {
+                puzzleImageView.post(new Runnable() {
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
@@ -218,7 +230,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                             e.printStackTrace();
                         }
                         dificulty = dificulty + count;
-                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
+                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
@@ -233,7 +245,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
-        imageView.post(new Runnable() {
+        puzzleImageView.post(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -241,7 +253,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
+                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
@@ -338,9 +350,23 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
 
+    static void animationFinishPuzzle (LottieAnimationView imageView, int animation) {
+
+        imageView.setAnimation(animation);
+        imageView.playAnimation();
+
+
+    }
+
 
     protected static String resolved(){
+
         textFinish.setVisibility(View.VISIBLE);
+        animationFinishPuzzle(starImageFinish, R.raw.animation_star);
+        animationFinishPuzzle(puzzleImageView, R.raw.finish_puzzle_game);
+        animationFinishPuzzle(finishFlags, R.raw.finish_flags);
+
+
         paused = true;
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
@@ -364,7 +390,7 @@ MapImg mapImg;
         int piecesNumber = rows*cols;
         Bitmap bitmap;
 
-        imageView = findViewById(R.id.imageView);
+        puzzleImageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
 /*
@@ -395,25 +421,25 @@ MapImg mapImg;
         if (getIntent().getParcelableExtra("photo")!=null){
             bitmap = getIntent().getParcelableExtra("photo");
             Drawable d = new BitmapDrawable(getResources(), bitmap);
-            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.setImageDrawable(d);
+            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.setImageDrawable(d);
             //imageView.setImageBitmap(bitmap);
         }else if(getIntent().getParcelableExtra("photoGallery")!=null){
             //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
             Uri uri = getIntent().getParcelableExtra("photoGallery");
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
             Drawable d = new BitmapDrawable(getResources(), bitmap);
-            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.setImageDrawable(d);
+            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.setImageDrawable(d);
         }else{
             bitmap = BitmapFactory.decodeResource(getResources(), img);
-            imageView.setImageDrawable(getResources().getDrawable(img));
+            puzzleImageView.setImageDrawable(getResources().getDrawable(img));
         }
 
 
-        int[] dimensions = getBitmapPositionInsideImageView(imageView);
+        int[] dimensions = getBitmapPositionInsideImageView(puzzleImageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];
         int scaledBitmapWidth = dimensions[2];
@@ -452,8 +478,8 @@ MapImg mapImg;
                 Bitmap pieceBitmap = Bitmap.createBitmap(croppedBitmap, xCoord - offsetX, yCoord - offsetY, pieceWidth + offsetX, pieceHeight + offsetY);
                 PuzzlePiece piece = new PuzzlePiece(getApplicationContext());
                 piece.setImageBitmap(pieceBitmap);
-                piece.xCoord = xCoord - offsetX + imageView.getLeft();
-                piece.yCoord = yCoord - offsetY + imageView.getTop();
+                piece.xCoord = xCoord - offsetX + puzzleImageView.getLeft();
+                piece.yCoord = yCoord - offsetY + puzzleImageView.getTop();
                 piece.pieceWidth = pieceWidth + offsetX;
                 piece.pieceHeight = pieceHeight + offsetY;
                 // this bitmap will hold our final puzzle piece image
