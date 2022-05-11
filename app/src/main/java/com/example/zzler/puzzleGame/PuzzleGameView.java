@@ -86,10 +86,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private Context c;
     private MusicManager musicManager;
     private AnimationPiece animationPiece;
-    static LottieAnimationView starImageFinish;
     private HashMap<Integer, Boolean> mapImgToSplit;
     ImageView puzzleImageView;
-    static LottieAnimationView finishFlags;
+    static LottieAnimationView starImageFinish, finishFlags, finishPuzzleConfetti;
+
 
 
     @Override
@@ -153,6 +153,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         puzzleImageView = findViewById(R.id.imageView);
         starImageFinish = findViewById(R.id.scoreStars);
         finishFlags = findViewById(R.id.finish_flags);
+        finishPuzzleConfetti = findViewById(R.id.finish_puzzle_confetti);
         paused = false;
         activateDB = true;
 
@@ -216,6 +217,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 }
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
+                starImageFinish.setVisibility(View.INVISIBLE);
+                finishFlags.setVisibility(View.INVISIBLE);
 
                 paused = false;
 
@@ -365,7 +368,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         starImageFinish.setVisibility(View.VISIBLE);
 
         animationFinishPuzzle(starImageFinish, R.raw.animation_star);
-        //animationFinishPuzzle(puzzleImageView, R.raw.finish_puzzle_game);
+        animationFinishPuzzle(finishPuzzleConfetti, R.raw.finish_puzzle_game);
 
         finishFlags.setVisibility(View.VISIBLE);
 

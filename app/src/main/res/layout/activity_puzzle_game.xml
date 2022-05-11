@@ -103,6 +103,15 @@
             app:layout_constraintWidth="match_parent"
             app:srcCompat="@drawable/splash" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/finish_puzzle_confetti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:lottie_rawRes="@raw/finish_puzzle_game">
+
+        </com.airbnb.lottie.LottieAnimationView>
+
     </RelativeLayout>
 
 
