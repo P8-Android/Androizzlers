@@ -88,7 +88,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private AnimationPiece animationPiece;
     static LottieAnimationView starImageFinish;
     private HashMap<Integer, Boolean> mapImgToSplit;
-    static LottieAnimationView puzzleImageView;
+    ImageView puzzleImageView;
     static LottieAnimationView finishFlags;
 
 
@@ -202,8 +202,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void onClick(View view) {
 
-                starImageFinish.setVisibility(View.INVISIBLE);
-                finishFlags.setVisibility(View.INVISIBLE);
+
                 activateDB = true;
                 afterClickTimerCollection.get(countToTimer).cancel();
                 paused = true;
@@ -224,7 +223,11 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 puzzleImageView.post(new Runnable() {
                     @Override
                     public void run() {
-                               e.printStackTrace();
+                        pieces.removeAll(pieces);
+                        try {
+                            pieces = splitImage(dificulty+count,urlImg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
@@ -362,7 +365,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         starImageFinish.setVisibility(View.VISIBLE);
 
         animationFinishPuzzle(starImageFinish, R.raw.animation_star);
-        animationFinishPuzzle(puzzleImageView, R.raw.finish_puzzle_game);
+        //animationFinishPuzzle(puzzleImageView, R.raw.finish_puzzle_game);
 
         finishFlags.setVisibility(View.VISIBLE);
 

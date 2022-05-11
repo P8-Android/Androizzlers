@@ -63,7 +63,8 @@
         android:src="@drawable/ic_baseline_info_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtTimeGame"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame"
+        tools:ignore="OnClick" />
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -91,7 +92,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
