@@ -9,4 +9,4 @@ public interface IPuzzleGamePresenter {
     void nextPuzzle(ImageView img);
     long saveScore(String puzzleName, float timeToSolved, Context context);
 
-}
+    }

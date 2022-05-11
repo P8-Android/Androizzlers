@@ -2,13 +2,14 @@ package com.example.zzler.puzzleGame;
 
 
 import static java.lang.Math.abs;
-import com.example.zzler.main.MainActivity;
 
-
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,8 +18,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
@@ -32,40 +33,102 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.zzler.R;
-import com.example.zzler.score.ScoreView;
+import com.example.zzler.main.MainActivity;
 import com.example.zzler.webView.Info;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Random;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @SuppressLint("HandlerLeak")
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
 
-    private Float timeGameSolved;
-    private PuzzleGamePresenterImpl gamePresenter;
+    private static final int PERMISSION_WRITE_CALENDAR = 0;
     protected static Integer dificulty;
-    private int count;
-    private static int countToTimer;
     static TextView textFinish;
     static TextView txtTimeGame;
     static boolean paused;
     static ArrayList<Timer> afterClickTimerCollection;
+    private static int countToTimer;
     boolean activateDB;
     Context context;
     Integer urlImg;
     ImageView imageView;
     Runnable runnable;
-
     ArrayList<PuzzlePiece> pieces;
+    private Float timeGameSolved;
+    private PuzzleGamePresenterImpl gamePresenter;
+    private int count;
+
+    protected static String resolved() {
+        textFinish.setVisibility(View.VISIBLE);
+        paused = true;
+//        countToTimer++;
+        String timeString = (String) txtTimeGame.getText();
+        //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
+
+        txtTimeGame.setText("Tiempo final: " + timeString);
+        return timeString;
+
+    }
+
+    protected static Integer calculateScore() {
+        String timeString = TouchListener.getTimeTotal();
+        return (int) 1 / Integer.parseInt(timeString);
+    }
+
+    private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
+        int[] ret = new int[4];
+
+        if (imageView == null || imageView.getDrawable() == null)
+            return ret;
+
+        // Get image dimensions
+        // Get image matrix values and place them in an array
+        float[] f = new float[9];
+        imageView.getImageMatrix().getValues(f);
+
+        // Extract the scale values using the constants (if aspect ratio maintained, scaleX == scaleY)
+        //final float scaleX = (float) 0.5;
+        //final float scaleY = (float) 0.5;
+
+        final float scaleX = f[Matrix.MSCALE_X];
+        final float scaleY = f[Matrix.MSCALE_Y];
+
+        // Get the drawable (could also get the bitmap behind the drawable and getWidth/getHeight)
+        final Drawable d = imageView.getDrawable();
+        final int origW = d.getIntrinsicWidth();
+        final int origH = d.getIntrinsicHeight();
+
+        // Calculate the actual dimensions
+        final int actW = Math.round(origW * scaleX);
+        final int actH = Math.round(origH * scaleY);
+
+        ret[2] = actW;
+        ret[3] = actH;
+
+        // Get image position
+        // We assume that the image is centered into ImageView
+        int imgViewW = imageView.getWidth();
+        int imgViewH = imageView.getHeight();
+
+        int top = (int) (imgViewH - actH) / 2;
+        int left = (int) (imgViewW - actW) / 2;
+
+        ret[0] = left;
+        ret[1] = top;
+
+        return ret;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,6 +137,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         inflater.inflate(R.menu.menu_toolbar, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
@@ -92,31 +156,42 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     @Override
-    public void saveScoreInCalendar (String puzzleName, float timeToSolved) {
-        int timeTo=(int) timeToSolved;
-        String score= " Score: "+(long) timeTo +" seg";
-        Log.i("SAVESCOREINCALENDAR","Starts to save score in mobile calendar");
+    public void saveScoreInCalendar(String puzzleName, float timeToSolved) {
+        ContentResolver cr = context.getContentResolver();
+        int timeTo = (int) timeToSolved;
+        String score = " Score: " + (long) timeTo + " seg";
+        Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
         Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         Calendar beg = Calendar.getInstance();
-        beg.add(Calendar.SECOND, - timeTo);
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
-        beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beg.getTimeInMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis())
-                .putExtra(CalendarContract.Events.TITLE, puzzleName +" " + score)
-                .putExtra(CalendarContract.Events.DESCRIPTION, score);
-        try
-        {
-            startActivity(intent);
-        }
-        catch (ActivityNotFoundException ErrVar)
-        {
-            Log.i("SAVESCOREINCALENDAR","It is neccesary install Calender App");
-            Toast.makeText(this, "It is neccesary install Calender App", Toast.LENGTH_LONG).show();
-        }
+        beg.add(Calendar.SECOND, -timeTo);
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+        beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+        ContentValues cv = new ContentValues();
+        cv.put("calendar_id", 1);
+        cv.put("title", puzzleName + " " + score);
+        cv.put("description", score);
+        TimeZone tz = cal.getTimeZone();
 
+        cv.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+        cv.put("dtstart", beg.getTimeInMillis());
+        cv.put("dtend", cal.getTimeInMillis());
+        try {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, PERMISSION_WRITE_CALENDAR);
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);
+                long eventID = Long.parseLong(uri.getLastPathSegment());
+                Toast.makeText(this, "Se ha insetado la puntuación en el calendario", Toast.LENGTH_LONG).show();
+                Log.i("SAVESCOREINCALENDAR", "Permission was granted");
+            }else{
+                Toast.makeText(this, "No se han aceptado los permisos para guardar la puntuación en el calendario", Toast.LENGTH_LONG).show();
+                Log.i("SAVESCOREINCALENDAR", "Permission was not granted");
+            }
+        } catch (Throwable t) {
+            Log.i("SAVESCOREINCALENDAR", "Error saving in Calendar");
+            Log.i("SAVESCOREINCALENDAR", String.valueOf(t));
+            Toast.makeText(this, "No se ha podido grabar la puntuación en el calendario", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -129,7 +204,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         Toolbar toolbar = findViewById(R.id.toolbarGame);
         toolbar.setTitle("Puzzle");
         setSupportActionBar(toolbar);
-        urlImg = getIntent().getIntExtra("pos",1);
+        urlImg = getIntent().getIntExtra("pos", 1);
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.txtTimeGame);
@@ -147,13 +222,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         afterClickTimerCollection = new ArrayList<>();
 
 
-
-
         startTimer();
 
 
-
-        btnUpLevel.setOnClickListener(new View.OnClickListener(){
+        btnUpLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -166,7 +238,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 count++;
 
 
-                for(PuzzlePiece piece : pieces) {
+                for (PuzzlePiece piece : pieces) {
                     layout.removeView(piece);
                 }
                 TouchListener.countToShowFinishMsg = 0;
@@ -179,10 +251,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
-                        pieces = splitImage(dificulty+count,urlImg);
+                        pieces = splitImage(dificulty + count, urlImg);
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener();
-                        for(PuzzlePiece piece : pieces) {
+                        for (PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
                         }
@@ -195,13 +267,12 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         });
 
 
-
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(dificulty,urlImg);
+                pieces = splitImage(dificulty, urlImg);
                 TouchListener touchListener = new TouchListener();
-                for(PuzzlePiece piece : pieces) {
+                for (PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
                 }
@@ -210,104 +281,83 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     }
 
-
-protected void startTimer() {
+    protected void startTimer() {
 
         afterClickTimerCollection.add(new Timer());
-        afterClickTimerCollection.get(countToTimer).scheduleAtFixedRate(new TimerTask(){
+        afterClickTimerCollection.get(countToTimer).scheduleAtFixedRate(new TimerTask() {
 
             Integer time = 0;
 
             @Override
-            public void run(){ runOnUiThread (runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if(!paused){
-                        time++;
-                        txtTimeGame.setText(time.toString() + " Segundos");
-                        Log.i("interval",time.toString());
-                    }else{
-                        if(activateDB){
-                            long id = (long) saveScore("Puzzle#"+count, time);
-                            if(id > 0){
-                                Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
+            public void run() {
+                runOnUiThread(runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!paused) {
+                            time++;
+                            txtTimeGame.setText(time.toString() + " Segundos");
+                            Log.i("interval", time.toString());
+                        } else {
+                            if (activateDB) {
+                                long id = (long) saveScore("Puzzle#" + count, time);
+                                if (id > 0) {
+                                    Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                        saveScoreInCalendar ("Puzzle#"+count, time);
-                        time = 0;
-                        stop();
+                            saveScoreInCalendar("Puzzle#" + count, time);
+                            time = 0;
+                            stop();
 
+
+                        }
 
                     }
 
-                }
-
-                private void stop() {
-                    afterClickTimerCollection.get(countToTimer).cancel();
-                }
-            });
+                    private void stop() {
+                        afterClickTimerCollection.get(countToTimer).cancel();
+                    }
+                });
             }
-        },0,1000);
+        }, 0, 1000);
 
 
     }
-
-
-
-    protected static String resolved(){
-        textFinish.setVisibility(View.VISIBLE);
-        paused = true;
-//        countToTimer++;
-        String timeString = (String) txtTimeGame.getText();
-        //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
-
-        txtTimeGame.setText("Tiempo final: "+timeString);
-        return timeString;
-
-    }
-
-    protected static Integer calculateScore(){
-        String timeString = TouchListener.getTimeTotal();
-        return (int) 1/Integer.parseInt(timeString);
-    }
-
-
 
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) {
         int rows = dificulty;
         int cols = dificulty;
-        int piecesNumber = rows*cols;
+        int piecesNumber = rows * cols;
 
         imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
-       // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
         int img;
-        switch (posImg){
+        switch (posImg) {
             case 0:
-                img =  R.drawable.img1;
+                img = R.drawable.img1;
                 break;
             case 1:
-                img =  R.drawable.img2;
+                img = R.drawable.img2;
                 break;
             case 2:
-                img =  R.drawable.img3;
+                img = R.drawable.img3;
                 break;
             case 3:
-                img =  R.drawable.img4;
+                img = R.drawable.img4;
                 break;
             case 4:
-                img =  R.drawable.img5;
+                img = R.drawable.img5;
                 break;
             case 5:
-                img =  R.drawable.img6;
+                img = R.drawable.img6;
                 break;
             case 6:
-                img =  R.drawable.img7;
+                img = R.drawable.img7;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + posImg);
@@ -329,11 +379,11 @@ protected void startTimer() {
 
         // Calculate the with and height of the pieces
 
-        int pieceWidth = croppedImageWidth/cols;
-        int pieceHeight = croppedImageHeight/rows;
+        int pieceWidth = croppedImageWidth / cols;
+        int pieceHeight = croppedImageHeight / rows;
 
 //        int pieceWidth = croppedImageWidth/cols;
-  //      int pieceHeight = croppedImageHeight/rows;
+        //      int pieceHeight = croppedImageHeight/rows;
 
         // Create each bitmap piece and add it to the resulting array
         int yCoord = 0;
@@ -382,7 +432,7 @@ protected void startTimer() {
                 } else {
                     // right bump
                     path.lineTo(pieceBitmap.getWidth(), offsetY + (pieceBitmap.getHeight() - offsetY) / 3);
-                    path.cubicTo(pieceBitmap.getWidth() - bumpSize,offsetY + (pieceBitmap.getHeight() - offsetY) / 6, pieceBitmap.getWidth() - bumpSize, offsetY + (pieceBitmap.getHeight() - offsetY) / 6 * 5, pieceBitmap.getWidth(), offsetY + (pieceBitmap.getHeight() - offsetY) / 3 * 2);
+                    path.cubicTo(pieceBitmap.getWidth() - bumpSize, offsetY + (pieceBitmap.getHeight() - offsetY) / 6, pieceBitmap.getWidth() - bumpSize, offsetY + (pieceBitmap.getHeight() - offsetY) / 6 * 5, pieceBitmap.getWidth(), offsetY + (pieceBitmap.getHeight() - offsetY) / 3 * 2);
                     path.lineTo(pieceBitmap.getWidth(), pieceBitmap.getHeight());
                 }
 
@@ -392,7 +442,7 @@ protected void startTimer() {
                 } else {
                     // bottom bump
                     path.lineTo(offsetX + (pieceBitmap.getWidth() - offsetX) / 3 * 2, pieceBitmap.getHeight());
-                    path.cubicTo(offsetX + (pieceBitmap.getWidth() - offsetX) / 6 * 5,pieceBitmap.getHeight() - bumpSize, offsetX + (pieceBitmap.getWidth() - offsetX) / 6, pieceBitmap.getHeight() - bumpSize, offsetX + (pieceBitmap.getWidth() - offsetX) / 3, pieceBitmap.getHeight());
+                    path.cubicTo(offsetX + (pieceBitmap.getWidth() - offsetX) / 6 * 5, pieceBitmap.getHeight() - bumpSize, offsetX + (pieceBitmap.getWidth() - offsetX) / 6, pieceBitmap.getHeight() - bumpSize, offsetX + (pieceBitmap.getWidth() - offsetX) / 3, pieceBitmap.getHeight());
                     path.lineTo(offsetX, pieceBitmap.getHeight());
                 }
 
@@ -445,51 +495,7 @@ protected void startTimer() {
         return pieces;
     }
 
-    private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
-        int[] ret = new int[4];
-
-        if (imageView == null || imageView.getDrawable() == null)
-            return ret;
-
-        // Get image dimensions
-        // Get image matrix values and place them in an array
-        float[] f = new float[9];
-        imageView.getImageMatrix().getValues(f);
-
-        // Extract the scale values using the constants (if aspect ratio maintained, scaleX == scaleY)
-        //final float scaleX = (float) 0.5;
-        //final float scaleY = (float) 0.5;
-
-        final float scaleX = f[Matrix.MSCALE_X];
-        final float scaleY = f[Matrix.MSCALE_Y];
-
-        // Get the drawable (could also get the bitmap behind the drawable and getWidth/getHeight)
-        final Drawable d = imageView.getDrawable();
-        final int origW = d.getIntrinsicWidth();
-        final int origH = d.getIntrinsicHeight();
-
-        // Calculate the actual dimensions
-        final int actW = Math.round(origW * scaleX);
-        final int actH = Math.round(origH * scaleY);
-
-        ret[2] = actW;
-        ret[3] = actH;
-
-        // Get image position
-        // We assume that the image is centered into ImageView
-        int imgViewW = imageView.getWidth();
-        int imgViewH = imageView.getHeight();
-
-        int top = (int) (imgViewH - actH)/2;
-        int left = (int) (imgViewW - actW)/2;
-
-        ret[0] = left;
-        ret[1] = top;
-
-        return ret;
-    }
-
-    public void goHome(View v){
+    public void goHome(View v) {
         paused = true;
         dificulty = 2;
         finish();
@@ -510,23 +516,21 @@ protected void startTimer() {
         return id;
     }
 
-    public void splitPuzzleImage (ImageView img){
+    public void splitPuzzleImage(ImageView img) {
 
     }
 
-    public boolean isWinner (){
+    public boolean isWinner() {
         boolean flag = false;
-        for(PuzzlePiece piece : pieces) {
-            if (piece.getCanMove()==false){ //si todas las piezas no se pueden mover, se terminó el puzzle
+        for (PuzzlePiece piece : pieces) {
+            if (piece.getCanMove() == false) { //si todas las piezas no se pueden mover, se terminó el puzzle
                 flag = true;
-            }else{
+            } else {
                 flag = false;
             }
         }
         return flag;
     }
-
-
 
 
 }
