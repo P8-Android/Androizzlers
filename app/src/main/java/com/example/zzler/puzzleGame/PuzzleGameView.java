@@ -202,7 +202,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             @Override
             public void onClick(View view) {
 
-
+                starImageFinish.setVisibility(View.INVISIBLE);
+                finishFlags.setVisibility(View.INVISIBLE);
                 activateDB = true;
                 afterClickTimerCollection.get(countToTimer).cancel();
                 paused = true;
@@ -223,11 +224,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 puzzleImageView.post(new Runnable() {
                     @Override
                     public void run() {
-                        pieces.removeAll(pieces);
-                        try {
-                            pieces = splitImage(dificulty+count,urlImg);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                               e.printStackTrace();
                         }
                         dificulty = dificulty + count;
                         TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
@@ -362,8 +359,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected static String resolved(){
 
         textFinish.setVisibility(View.VISIBLE);
+        starImageFinish.setVisibility(View.VISIBLE);
+
         animationFinishPuzzle(starImageFinish, R.raw.animation_star);
         animationFinishPuzzle(puzzleImageView, R.raw.finish_puzzle_game);
+
+        finishFlags.setVisibility(View.VISIBLE);
+
         animationFinishPuzzle(finishFlags, R.raw.finish_flags);
 
 
