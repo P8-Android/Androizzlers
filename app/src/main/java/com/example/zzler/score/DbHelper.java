@@ -56,8 +56,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToPosition(1)) {
             do {
-                scoreList.add(new Score(cursor.getString(1).substring(7),cursor.getFloat(2),cursor.getString(3)));
-
+                scoreList.add(new Score(cursor.getString(1),cursor.getFloat(2),cursor.getString(3)));
             }while (cursor.moveToNext());
 
         }

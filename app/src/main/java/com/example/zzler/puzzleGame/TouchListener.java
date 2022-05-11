@@ -4,10 +4,16 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import com.example.zzler.R;
 
 public class TouchListener implements View.OnTouchListener {
     private float xDelta;
@@ -15,6 +21,15 @@ public class TouchListener implements View.OnTouchListener {
 
     static int countToShowFinishMsg = 0;
     static String timeTotal;
+
+    boolean flagMusic = true;
+    MediaPlayer mdDrag;
+    MediaPlayer mdSuccess;
+
+    public TouchListener(MediaPlayer mdDrag, MediaPlayer mdSuccess) {
+        this.mdDrag = mdDrag;
+        this.mdSuccess = mdSuccess;
+    }
 
     public static String getTimeTotal() {
         return timeTotal;
@@ -25,8 +40,9 @@ public class TouchListener implements View.OnTouchListener {
         float x = motionEvent.getRawX();
         float y = motionEvent.getRawY();
         final double tolerance = sqrt(pow(view.getWidth(), 2) + pow(view.getHeight(), 2)) / 10;
-
         PuzzlePiece piece = (PuzzlePiece) view;
+
+
         if (!piece.canMove) {
             return true;
         }
@@ -40,18 +56,27 @@ public class TouchListener implements View.OnTouchListener {
                 piece.bringToFront();
                 break;
             case MotionEvent.ACTION_MOVE:
+                //mdSuccess.pause();
+                if(flagMusic)
+                    playMusic(mdDrag);
+                flagMusic=false;
                 lParams.leftMargin = (int) (x - xDelta);
                 lParams.topMargin = (int) (y - yDelta);
                 view.setLayoutParams(lParams);
                 break;
             case MotionEvent.ACTION_UP:
+                if(!flagMusic&&mdDrag!=null)
+                    mdDrag.pause();
+                flagMusic = true;
                 int xDiff = abs(piece.xCoord - lParams.leftMargin);
                 int yDiff = abs(piece.yCoord - lParams.topMargin);
                 if (xDiff <= tolerance && yDiff <= tolerance) {
+
                     lParams.leftMargin = piece.xCoord;
                     lParams.topMargin = piece.yCoord;
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
+                    mdSuccess.start();
                     countToShowFinishMsg++;
                     sendViewToBack(piece);
                     if(countToShowFinishMsg == PuzzleGameView.dificulty*PuzzleGameView.dificulty){
@@ -67,10 +92,12 @@ public class TouchListener implements View.OnTouchListener {
 
 
         }
-
-
-
         return true;
+    }
+
+    private void playMusic(MediaPlayer mdDrag) {
+        mdDrag.start();
+        flagMusic = false;
     }
 
     public void sendViewToBack(final View child) {
