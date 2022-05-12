@@ -7,11 +7,8 @@ import com.example.zzler.main.MainActivity;
 import android.provider.CalendarContract;
 import android.content.ActivityNotFoundException;
 import android.annotation.SuppressLint;
-<<<<<<< HEAD
-import android.content.ActivityNotFoundException;
-=======
+
 import android.app.Activity;
->>>>>>> 7bd8fce02e265aa04a644d30bb509cb92bbdf79d
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,11 +24,9 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.provider.CalendarContract;
-=======
+
 import android.provider.MediaStore;
->>>>>>> 7bd8fce02e265aa04a644d30bb509cb92bbdf79d
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
