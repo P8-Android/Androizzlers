@@ -368,14 +368,15 @@ protected void startTimer() {
                         Log.i("interval",time.toString());
                     }else{
                         if(activateDB){
-                            long id = (long) saveScore("Puzzle#"+count, time);
+                            long id = (long) saveScore("Level #"+count, time);
+                            saveScoreInCalendar ("Level #"+count, time);
                             if(id > 0){
                                 Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
                             }
                         }
-                        saveScoreInCalendar ("Puzzle#"+count, time);
+
                         time = 0;
                         stop();
 
