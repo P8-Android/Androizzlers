@@ -5,8 +5,14 @@ import static java.lang.Math.abs;
 import com.example.zzler.main.MainActivity;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.graphics.Color;
+import android.os.Build;
 import android.provider.CalendarContract;
 import android.content.ActivityNotFoundException;
 import android.annotation.SuppressLint;
@@ -48,10 +54,13 @@ import android.widget.Toast;
 
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.zzler.main.MainActivity;
@@ -100,6 +109,32 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private HashMap<Integer, Boolean> mapImgToSplit;
 
 
+    private PendingIntent pendingIntent;
+    private final static String CHANNEL_ID = "principal";
+    private final static int NOTIFICATION_ID = 0;
+
+    private void createNotification(){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.logo_androizzlers);
+        builder.setContentTitle("Primera Notificacion");
+        builder.setContentText("Este es el texto");
+        builder.setColor(Color.CYAN);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setLights(Color.CYAN, 1000, 1000);
+        builder.setVibrate(new long[]{1000L, 1000L, 1000L, 1000L});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
+        notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotificationChannel(){
+        CharSequence name = "notificacion";
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,name, NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(notificationChannel);
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -207,7 +242,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         count = 1;
         countToTimer = 0;
         afterClickTimerCollection = new ArrayList<>();
-
+        createNotificationChannel();
 
         //Producto2
         c = this;
@@ -222,7 +257,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         mapImgToSplit = mapImg.mapImgToSplit;
 
 
-  
+
 
 
 
@@ -319,7 +354,7 @@ btnSelectSong.setOnClickListener(new View.OnClickListener(){
             Log.i("*******","ha pasado por aqui");
             // The result data contains a URI for the document or directory that
             // the user selected.
-            Uri uri = null;          
+            Uri uri = null;
             if (data != null) {
                 uri = data.getData();
                 urlSong = uri;
@@ -386,6 +421,7 @@ protected void startTimer() {
                 }
 
                 private void stop() {
+                    createNotification();
                     TouchListener.setCountToShowFinishMsg(0);
                     afterClickTimerCollection.get(countToTimer).cancel();
                 }
