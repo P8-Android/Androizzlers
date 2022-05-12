@@ -55,7 +55,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Random;
+
 
 @SuppressLint("HandlerLeak")
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
@@ -92,7 +92,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     protected void onPause() {
         super.onPause();
         afterClickTimerCollection.get(countToTimer).cancel();
-        finish();
         mediaPlayer.pause();
     }
 
@@ -101,6 +100,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         super.onResume();
         mediaPlayer.start();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -169,6 +170,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.txtTimeGame);
         imageStarFinish = findViewById(R.id.scoreStars);
+        btnSelectSong = findViewById(R.id.selectSong);
+        aSwitch = findViewById(R.id.turnMusic);
         final RelativeLayout layout = findViewById(R.id.layout);
         imageView = findViewById(R.id.imageView);
         paused = false;
@@ -201,15 +204,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
 
-        btnSelectSong.setOnClickListener(new View.OnClickListener(){
+btnSelectSong.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.i("Entrada","OnClick");
-                final int PICK_MP3_FILE = 8;
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                final int PICK_MP3_FILE = 2;
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("audio/*");
-                Log.i("medio","antesStartActivity");
-                startActivityForResult(intent, 5);
+                startActivityForResult(intent, PICK_MP3_FILE);
             }
         });
 
@@ -285,16 +287,16 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("*******","OnActivityResult");
+ @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 5
+        if (requestCode == 2
                 && resultCode == Activity.RESULT_OK) {
             Log.i("*******","ha pasado por aqui");
             // The result data contains a URI for the document or directory that
             // the user selected.
-            Uri uri = null;
+            Uri uri = null;          
             if (data != null) {
                 uri = data.getData();
                 urlSong = uri;
