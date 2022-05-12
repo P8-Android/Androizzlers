@@ -385,6 +385,7 @@ protected void startTimer() {
                 }
 
                 private void stop() {
+                    TouchListener.setCountToShowFinishMsg(0);
                     afterClickTimerCollection.get(countToTimer).cancel();
                 }
             });

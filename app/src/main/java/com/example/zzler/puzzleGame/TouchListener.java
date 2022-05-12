@@ -26,6 +26,10 @@ public class TouchListener implements View.OnTouchListener {
     MediaPlayer mdDrag;
     MediaPlayer mdSuccess;
 
+    public static void setCountToShowFinishMsg(int countToShowFinishMsg) {
+        TouchListener.countToShowFinishMsg = countToShowFinishMsg;
+    }
+
     public TouchListener(MediaPlayer mdDrag, MediaPlayer mdSuccess) {
         this.mdDrag = mdDrag;
         this.mdSuccess = mdSuccess;
