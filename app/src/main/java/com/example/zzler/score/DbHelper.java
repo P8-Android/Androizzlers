@@ -3,10 +3,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -39,6 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<Score> getScoreFromBBDD () {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -59,9 +64,10 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
+        Collections.sort(scoreList, Comparator.comparing(Score::getPuzzleLevel));
+
         return scoreList;
 
     }
 
 }
-

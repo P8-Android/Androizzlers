@@ -4,9 +4,14 @@ package com.example.zzler.puzzleGame;
 import static java.lang.Math.abs;
 import com.example.zzler.main.MainActivity;
 
-
-import android.annotation.SuppressLint;
+import android.provider.CalendarContract;
 import android.content.ActivityNotFoundException;
+import android.annotation.SuppressLint;
+<<<<<<< HEAD
+import android.content.ActivityNotFoundException;
+=======
+import android.app.Activity;
+>>>>>>> 7bd8fce02e265aa04a644d30bb509cb92bbdf79d
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,13 +24,22 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.provider.CalendarContract;
+=======
+import android.provider.MediaStore;
+>>>>>>> 7bd8fce02e265aa04a644d30bb509cb92bbdf79d
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,19 +47,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 @SuppressLint("HandlerLeak")
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
@@ -57,6 +75,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private static int countToTimer;
     static TextView textFinish;
     static TextView txtTimeGame;
+    static ImageView imageStarFinish;
     static boolean paused;
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
@@ -66,6 +85,31 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     Runnable runnable;
 
     ArrayList<PuzzlePiece> pieces;
+
+    //Producto2
+    public MediaPlayer mediaPlayer;
+    private Uri urlSong;
+    public SwitchCompat aSwitch;
+    private Button btnSelectSong;
+    private Context c;
+    private MusicManager musicManager;
+    private HashMap<Integer, Boolean> mapImgToSplit;
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        afterClickTimerCollection.get(countToTimer).cancel();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,6 +177,9 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         gamePresenter = new PuzzleGamePresenterImpl();
         textFinish = findViewById(R.id.txtFinish);
         txtTimeGame = findViewById(R.id.txtTimeGame);
+        imageStarFinish = findViewById(R.id.scoreStars);
+        btnSelectSong = findViewById(R.id.selectSong);
+        aSwitch = findViewById(R.id.turnMusic);
         final RelativeLayout layout = findViewById(R.id.layout);
         imageView = findViewById(R.id.imageView);
         paused = false;
@@ -147,10 +194,34 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         afterClickTimerCollection = new ArrayList<>();
 
 
+        //Producto2
+        c = this;
+        aSwitch = findViewById(R.id.turnMusic);
+        btnSelectSong = findViewById(R.id.selectSong);
+        int urlSongFirst = R.raw.officialsong;
+        mediaPlayer = MediaPlayer.create(this,urlSongFirst);
+        mediaPlayer.start();
+        aSwitch.setChecked(true);
+        musicManager = new MusicManager(c);
+        mapImg = new MapImg();
+        mapImgToSplit = mapImg.mapImgToSplit;
 
 
-        startTimer();
+  
 
+
+
+
+btnSelectSong.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                final int PICK_MP3_FILE = 2;
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("audio/*");
+                startActivityForResult(intent, PICK_MP3_FILE);
+            }
+        });
 
 
         btnUpLevel.setOnClickListener(new View.OnClickListener(){
@@ -172,6 +243,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
 
+
+
                 paused = false;
 
 
@@ -179,9 +252,13 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
-                        pieces = splitImage(dificulty+count,urlImg);
+                        try {
+                            pieces = splitImage(dificulty+count,urlImg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         dificulty = dificulty + count;
-                        TouchListener touchListener = new TouchListener();
+                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
@@ -199,8 +276,12 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage(dificulty,urlImg);
-                TouchListener touchListener = new TouchListener();
+                try {
+                    pieces = splitImage(dificulty,urlImg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
@@ -208,7 +289,51 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
             }
         });
 
+        startTimer();
+        turnMusic();
+
+
     }
+
+ @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2
+                && resultCode == Activity.RESULT_OK) {
+            Log.i("*******","ha pasado por aqui");
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;          
+            if (data != null) {
+                uri = data.getData();
+                urlSong = uri;
+                if (urlSong!=null){
+                    mediaPlayer.stop();
+                    mediaPlayer = MediaPlayer.create(this,urlSong);
+                    mediaPlayer.start();
+                }
+                // Perform operations on the document using its URI.
+            }
+        }
+    }
+    private void turnMusic() {
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b)
+                    if(mediaPlayer.isPlaying()){
+                        mediaPlayer.pause();
+                    }
+                if (b){
+                    if(!mediaPlayer.isPlaying()){
+                        mediaPlayer.start();
+                    }
+                }
+            }
+        });
+    }
+
 
 
 protected void startTimer() {
@@ -258,6 +383,7 @@ protected void startTimer() {
 
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
+        imageStarFinish.setVisibility(View.VISIBLE);
         paused = true;
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
@@ -273,12 +399,14 @@ protected void startTimer() {
         return (int) 1/Integer.parseInt(timeString);
     }
 
+MapImg mapImg;
 
-
-    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) {
+    @SuppressLint("NewApi")
+    protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) throws IOException {
         int rows = dificulty;
         int cols = dificulty;
         int piecesNumber = rows*cols;
+        Bitmap bitmap;
 
         imageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
@@ -286,35 +414,37 @@ protected void startTimer() {
         // Get the scaled bitmap of the source image
        // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
-        int img;
-        switch (posImg){
-            case 0:
-                img =  R.drawable.img1;
-                break;
-            case 1:
-                img =  R.drawable.img2;
-                break;
-            case 2:
-                img =  R.drawable.img3;
-                break;
-            case 3:
-                img =  R.drawable.img4;
-                break;
-            case 4:
-                img =  R.drawable.img5;
-                break;
-            case 5:
-                img =  R.drawable.img6;
-                break;
-            case 6:
-                img =  R.drawable.img7;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + posImg);
+        int img = 0;
+        do{
+            img = getImgToSplit(posImg);
+
+            Log.i("Boooolean",mapImgToSplit.get(img).toString());
+        }while(mapImgToSplit.get(img)==false);
+        mapImgToSplit.replace(img,false);
+
+        //mapImgToSplit.put(img,false);
+
+        if (getIntent().getParcelableExtra("photo")!=null){
+            bitmap = getIntent().getParcelableExtra("photo");
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setImageDrawable(d);
+            //imageView.setImageBitmap(bitmap);
+        }else if(getIntent().getParcelableExtra("photoGallery")!=null){
+            //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
+            Uri uri = getIntent().getParcelableExtra("photoGallery");
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setImageDrawable(d);
+        }else{
+            bitmap = BitmapFactory.decodeResource(getResources(), img);
+            imageView.setImageDrawable(getResources().getDrawable(img));
         }
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), img);
-        imageView.setImageDrawable(getResources().getDrawable(img));
+
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];
@@ -445,6 +575,47 @@ protected void startTimer() {
         return pieces;
     }
 
+    @SuppressLint("NewApi")
+    private int getImgToSplit(Integer posImg) {
+        int img;
+            switch (posImg){
+                case 0:
+                    img =  R.drawable.img1;
+                    this.urlImg++;
+                    break;
+                case 1:
+                    img =  R.drawable.img2;
+                    this.urlImg++;
+                    break;
+                case 2:
+                    img =  R.drawable.img3;
+                    this.urlImg++;
+                    break;
+                case 3:
+                    img =  R.drawable.img4;
+                    this.urlImg++;
+                    break;
+                case 4:
+                    img =  R.drawable.img5;
+                    this.urlImg++;
+                    break;
+                case 5:
+                    img =  R.drawable.img6;
+                    this.urlImg++;
+                    break;
+                case 6:
+                    img =  R.drawable.img7;
+                    this.urlImg = 0;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + posImg);
+            }
+
+        return img;
+
+    }
+
+
     private static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
 
@@ -490,6 +661,7 @@ protected void startTimer() {
     }
 
     public void goHome(View v){
+        activateDB = false;
         paused = true;
         dificulty = 2;
         finish();

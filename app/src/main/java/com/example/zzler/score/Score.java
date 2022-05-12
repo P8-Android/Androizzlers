@@ -5,14 +5,14 @@ import java.io.Serializable;
 
 public class Score implements Serializable {
 
-    private String puzzleName;
+    private String puzzleLevel;
     private Float scoreTime;
     private String date;
 
     public Score (){}
 
     public Score(String puzzleName, Float scoreTime, String date) {
-        this.puzzleName = puzzleName;
+        this.puzzleLevel = puzzleName;
         this.scoreTime = scoreTime;
         this.date = date;
 
@@ -22,12 +22,12 @@ public class Score implements Serializable {
         return date;
     }
 
-    public String getPuzzleName() {
-        return puzzleName;
+    public String getPuzzleLevel() {
+        return puzzleLevel;
     }
 
     public void setPuzzleName(String puzzleName) {
-        this.puzzleName = puzzleName;
+        this.puzzleLevel = puzzleName;
     }
 
     public Float getScoreTime() {
