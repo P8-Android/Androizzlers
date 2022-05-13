@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
+import android.media.metrics.Event;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -42,9 +44,15 @@ import com.example.zzler.R;
 import com.example.zzler.main.MainActivity;
 import com.example.zzler.webView.Info;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,10 +61,12 @@ import java.util.TimerTask;
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
 
     private static final int PERMISSION_WRITE_CALENDAR = 0;
+    private static final int PERMISSION_READ_CALENDAR = 0;
     protected static Integer dificulty;
     static TextView textFinish;
     static TextView txtTimeGame;
     static boolean paused;
+    boolean isNewRecord;
     static ArrayList<Timer> afterClickTimerCollection;
     private static int countToTimer;
     boolean activateDB;
@@ -157,27 +167,33 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     @Override
     public void saveScoreInCalendar(String puzzleName, float timeToSolved) {
-        ContentResolver cr = context.getContentResolver();
+        Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
+
         int timeTo = (int) timeToSolved;
         String score = " Score: " + (long) timeTo + " seg";
-        Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
+
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+
         Calendar beg = Calendar.getInstance();
         beg.add(Calendar.SECOND, -timeTo);
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
         beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-        ContentValues cv = new ContentValues();
-        cv.put("calendar_id", 1);
-        cv.put("title", puzzleName + " " + score);
-        cv.put("description", score);
-        TimeZone tz = cal.getTimeZone();
 
-        cv.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
-        cv.put("dtstart", beg.getTimeInMillis());
-        cv.put("dtend", cal.getTimeInMillis());
+        ContentResolver cr = context.getContentResolver();
+        ContentValues cv = new ContentValues();
+            cv.put("calendar_id", 1);
+            cv.put("title", puzzleName + " " + score);
+            cv.put("description", score);
+            TimeZone tz = cal.getTimeZone();
+            cv.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+            cv.put("dtstart", beg.getTimeInMillis());
+            cv.put("dtend", cal.getTimeInMillis());
+
         try {
+
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, PERMISSION_WRITE_CALENDAR);
+
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                 Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);
                 long eventID = Long.parseLong(uri.getLastPathSegment());
@@ -187,11 +203,78 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 Toast.makeText(this, "No se han aceptado los permisos para guardar la puntuación en el calendario", Toast.LENGTH_LONG).show();
                 Log.i("SAVESCOREINCALENDAR", "Permission was not granted");
             }
+
         } catch (Throwable t) {
             Log.i("SAVESCOREINCALENDAR", "Error saving in Calendar");
             Log.i("SAVESCOREINCALENDAR", String.valueOf(t));
             Toast.makeText(this, "No se ha podido grabar la puntuación en el calendario", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public boolean isNewRecord(int level, int score){
+        int bestScoreStore = getScoreCalendar(level);
+        return bestScoreStore < score?false: true;
+    }
+
+    public JSONObject getBestScoreLevels(int maxLevel){
+        JSONObject bestScoreLevels = new JSONObject();
+
+        try {
+            for(int i=1; i<=maxLevel; i++){
+                String level = "Level " + i;
+                bestScoreLevels.put(level, getScoreCalendar(i));
+            }
+        //Log.i("TAG","" + bestScoreLevels.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return bestScoreLevels;
+    }
+
+    public int getScoreCalendar(int levelToEvaluate){
+        ArrayList <Integer> scoreLevelList = new ArrayList<Integer>();
+
+        final String[] EVENT_PROJECTION = new String[]{
+                CalendarContract.Events._ID,
+                CalendarContract.Events.TITLE,
+                CalendarContract.Events.DTSTART,
+                CalendarContract.Events.DTEND,
+        };
+
+        final int PROJECTION_ID_INDEX = 0;
+        final int PROJECTION_TITLE_INDEX = 1;
+        final int PROJECTION_DTSTART_INDEX = 2;
+        final int PROJECTION_DTEND_INDEX = 3;
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(2020, 3, 18, 0, 0);
+        long startMillis = beginTime.getTimeInMillis();
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(2020, 3, 24, 0, 0);
+        long endMillis = endTime.getTimeInMillis();
+
+        String where = "( (title LIKE \'Puzzle%\') AND (calendar_id = " + 1 + "))";
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+
+            ContentResolver cr = getContentResolver();
+            Cursor cursor = cr.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, where,null, null, null);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    String fullInfo = cursor.getString(PROJECTION_TITLE_INDEX);
+                    String score = fullInfo.split(" ")[3];
+                    String level = fullInfo.split(" ")[0].split("#")[1];
+                    if (Integer.parseInt(level) == levelToEvaluate){
+                        scoreLevelList.add(Integer.parseInt(score));
+                    }
+                }
+                Collections.sort(scoreLevelList);
+                Log.i("TAG", "Para el nivel: "+levelToEvaluate+" el record es: " + scoreLevelList.get(0) + " segundos");
+                cursor.close();
+            }
+
+        }
+        return scoreLevelList.get(0);
     }
 
     @Override
@@ -306,6 +389,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                                     Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
                                 }
                             }
+                            //Could be use to present score in the main screen
+                            // getBestScoreLevels(3);
+                            isNewRecord = isNewRecord(count, time);
+                            Log.i("TAG", "Nuevo record: " + isNewRecord);
                             saveScoreInCalendar("Puzzle#" + count, time);
                             time = 0;
                             stop();
