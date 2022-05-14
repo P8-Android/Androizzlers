@@ -126,9 +126,9 @@ private static final int PERMISSION_READ_CALENDAR = 0;
 
     private void createNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.logo_androizzlers);
-        builder.setContentTitle("Primera Notificacion");
-        builder.setContentText("Este es el texto");
+        builder.setContentTitle("New or equal RECORD!!");
+        builder.setContentText("Calendar's Record has been saved!");
+        builder.setSmallIcon(R.drawable.puzzleicon);
         builder.setColor(Color.CYAN);
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         builder.setLights(Color.CYAN, 1000, 1000);
@@ -350,7 +350,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
 
 
 
-btnSelectSong.setOnClickListener(new View.OnClickListener(){
+    btnSelectSong.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 final int PICK_MP3_FILE = 2;
@@ -499,19 +499,15 @@ protected void startTimer() {
                                 Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
                             }
                         }
-
-                        time = 0;
                         stop();
-
-
                     }
-
                 }
 
                 private void stop() {
                     if (isNewRecord(count,time))
                         createNotification();
                     TouchListener.setCountToShowFinishMsg(0);
+                    time = 0;
                     afterClickTimerCollection.get(countToTimer).cancel();
                 }
             });
