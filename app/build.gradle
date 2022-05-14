@@ -27,7 +27,17 @@ android {
     }
 }
 
+//Firebase SDK Start
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+//Firebase SDK - End
+
 dependencies {
+
+    //Firebase SDK - Start
+    implementation platform('com.google.firebase:firebase-bom:30.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    //Firebase SDK - End
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'

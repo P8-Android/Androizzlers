@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "377623037752",
+    "project_id": "p8-prod3",
+    "storage_bucket": "p8-prod3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377623037752:android:86150cc361d7c8da9263cd",
+        "android_client_info": {
+          "package_name": "com.androizzlers.puzzledroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377623037752-6u9e6k3672plakvmgoumnvnbsh8tqmnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD36Bt0lDQsZgsRx2AWWlX7W3pZ-W11tOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377623037752-6u9e6k3672plakvmgoumnvnbsh8tqmnk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
