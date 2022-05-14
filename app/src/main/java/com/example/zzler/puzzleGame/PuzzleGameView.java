@@ -2,6 +2,9 @@ package com.example.zzler.puzzleGame;
 
 
 import static java.lang.Math.abs;
+import static java.lang.Math.toRadians;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.zzler.main.MainActivity;
 import android.annotation.SuppressLint;
 import android.Manifest;
@@ -46,6 +49,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -117,7 +122,10 @@ private static final int PERMISSION_READ_CALENDAR = 0;
     private Button btnSelectSong;
     private Context c;
     private MusicManager musicManager;
+    private AnimationPiece animationPiece;
     private HashMap<Integer, Boolean> mapImgToSplit;
+    ImageView puzzleImageView;
+    static LottieAnimationView starImageFinish, finishFlags, finishPuzzleConfetti;
 
 
     private PendingIntent pendingIntent;
@@ -319,6 +327,10 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         btnSelectSong = findViewById(R.id.selectSong);
         aSwitch = findViewById(R.id.turnMusic);
         final RelativeLayout layout = findViewById(R.id.layout);
+	    puzzleImageView = findViewById(R.id.imageView);
+        starImageFinish = findViewById(R.id.scoreStars);
+        finishFlags = findViewById(R.id.finish_flags);
+        finishPuzzleConfetti = findViewById(R.id.finish_puzzle_confetti);
         imageView = findViewById(R.id.imageView);
         paused = false;
         activateDB = true;
@@ -343,6 +355,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         musicManager = new MusicManager(c);
         mapImg = new MapImg();
         mapImgToSplit = mapImg.mapImgToSplit;
+        animationPiece = new AnimationPiece(c);
 
 
 
@@ -380,13 +393,13 @@ private static final int PERMISSION_READ_CALENDAR = 0;
                 }
                 TouchListener.countToShowFinishMsg = 0;
                 textFinish.setVisibility(View.GONE);
-
-
+                starImageFinish.setVisibility(View.INVISIBLE);
+                finishFlags.setVisibility(View.INVISIBLE);
 
                 paused = false;
 
 
-                imageView.post(new Runnable() {
+                puzzleImageView.post(new Runnable() {
                     @Override
                     public void run() {
                         pieces.removeAll(pieces);
@@ -396,7 +409,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
                             e.printStackTrace();
                         }
                         dificulty = dificulty + count;
-                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
+                        TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
                         for(PuzzlePiece piece : pieces) {
                             piece.setOnTouchListener(touchListener);
                             layout.addView(piece);
@@ -411,7 +424,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
 
 
 
-        imageView.post(new Runnable() {
+        puzzleImageView.post(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -419,7 +432,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess);
+                TouchListener touchListener = new TouchListener(musicManager.mdDrag,musicManager.mdSuccess, animationPiece.aPiece);
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
@@ -504,8 +517,12 @@ protected void startTimer() {
                 }
 
                 private void stop() {
-                    if (isNewRecord(count,time))
-                        createNotification();
+                    try{
+                        if (isNewRecord(count,time))
+                            createNotification();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     TouchListener.setCountToShowFinishMsg(0);
                     time = 0;
                     afterClickTimerCollection.get(countToTimer).cancel();
@@ -518,10 +535,27 @@ protected void startTimer() {
     }
 
 
+    static void animationFinishPuzzle (LottieAnimationView imageView, int animation) {
+
+        imageView.setAnimation(animation);
+        imageView.playAnimation();
+
+
+    }
+
 
     protected static String resolved(){
         textFinish.setVisibility(View.VISIBLE);
-        imageStarFinish.setVisibility(View.VISIBLE);
+        starImageFinish.setVisibility(View.VISIBLE);
+
+        animationFinishPuzzle(starImageFinish, R.raw.animation_star);
+        animationFinishPuzzle(finishPuzzleConfetti, R.raw.finish_puzzle_game);
+
+        finishFlags.setVisibility(View.VISIBLE);
+
+        animationFinishPuzzle(finishFlags, R.raw.finish_flags);
+
+
         paused = true;
 //        countToTimer++;
         String timeString = (String) txtTimeGame.getText();
@@ -546,7 +580,7 @@ MapImg mapImg;
         int piecesNumber = rows*cols;
         Bitmap bitmap;
 
-        imageView = findViewById(R.id.imageView);
+        puzzleImageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
@@ -565,25 +599,25 @@ MapImg mapImg;
         if (getIntent().getParcelableExtra("photo")!=null){
             bitmap = getIntent().getParcelableExtra("photo");
             Drawable d = new BitmapDrawable(getResources(), bitmap);
-            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.setImageDrawable(d);
+            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.setImageDrawable(d);
             //imageView.setImageBitmap(bitmap);
         }else if(getIntent().getParcelableExtra("photoGallery")!=null){
             //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
             Uri uri = getIntent().getParcelableExtra("photoGallery");
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
             Drawable d = new BitmapDrawable(getResources(), bitmap);
-            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.setImageDrawable(d);
+            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            puzzleImageView.setImageDrawable(d);
         }else{
             bitmap = BitmapFactory.decodeResource(getResources(), img);
-            imageView.setImageDrawable(getResources().getDrawable(img));
+            puzzleImageView.setImageDrawable(getResources().getDrawable(img));
         }
 
 
-        int[] dimensions = getBitmapPositionInsideImageView(imageView);
+        int[] dimensions = getBitmapPositionInsideImageView(puzzleImageView);
         int scaledBitmapLeft = dimensions[0];
         int scaledBitmapTop = dimensions[1];
         int scaledBitmapWidth = dimensions[2];
@@ -622,8 +656,8 @@ MapImg mapImg;
                 Bitmap pieceBitmap = Bitmap.createBitmap(croppedBitmap, xCoord - offsetX, yCoord - offsetY, pieceWidth + offsetX, pieceHeight + offsetY);
                 PuzzlePiece piece = new PuzzlePiece(getApplicationContext());
                 piece.setImageBitmap(pieceBitmap);
-                piece.xCoord = xCoord - offsetX + imageView.getLeft();
-                piece.yCoord = yCoord - offsetY + imageView.getTop();
+                piece.xCoord = xCoord - offsetX + puzzleImageView.getLeft();
+                piece.yCoord = yCoord - offsetY + puzzleImageView.getTop();
                 piece.pieceWidth = pieceWidth + offsetX;
                 piece.pieceHeight = pieceHeight + offsetY;
                 // this bitmap will hold our final puzzle piece image
