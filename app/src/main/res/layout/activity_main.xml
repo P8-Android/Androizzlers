@@ -32,6 +32,26 @@
         android:onClick="showInfo"
         android:src="@drawable/ic_baseline_info_24" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/googleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="20dp"
+        android:src="@drawable/google_logo"
+        android:padding="1120dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:borderWidth="0dp"
+        android:elevation="10dp"
+        android:backgroundTint="@color/primaryColor"
+        />
+        <!--android:backgroundTint="@color/white"
+        android:backgroundTint="@color/primaryColor"
+        android:onClick="showInfo"
+        android:src="@drawable/ic_baseline_info_24"
+        android:tint="@color/black"-->
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -104,7 +124,6 @@
             android:fontFamily="@font/chewy"
             android:onClick="puzzleScore"
             android:text="@string/btnScore" />
-
 
 
     </LinearLayout>
