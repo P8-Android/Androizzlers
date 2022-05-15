@@ -32,7 +32,7 @@
         android:onClick="showInfo"
         android:src="@drawable/ic_baseline_info_24" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/googleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,13 +44,21 @@
         android:adjustViewBounds="true"
         app:borderWidth="0dp"
         android:elevation="10dp"
-        android:backgroundTint="@color/primaryColor"
-        />
-        <!--android:backgroundTint="@color/white"
-        android:backgroundTint="@color/primaryColor"
-        android:onClick="showInfo"
-        android:src="@drawable/ic_baseline_info_24"
-        android:tint="@color/black"-->
+        android:backgroundTint="@color/primaryColor" /> -->
+
+    <TextView
+        android:id="@+id/status_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:text="Sign Out"
+        android:layout_marginBottom="30dp"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -60,19 +68,18 @@
         android:orientation="vertical">
 
 
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_height="323dp"
+            android:layout_gravity="center"
             android:layout_margin="50dp"
-            app:cardElevation="10dp"
+            android:layout_marginTop="0dp"
+            app:cardBackgroundColor="@color/primaryLightColor"
             app:cardCornerRadius="8dp"
+            app:cardElevation="10dp"
             app:cardMaxElevation="10dp"
             app:cardPreventCornerOverlap="true"
-            app:cardBackgroundColor="@color/primaryLightColor"
-            app:cardUseCompatPadding="true"
-            android:layout_gravity="center">
+            app:cardUseCompatPadding="true">
 
             <ImageView
                 android:id="@+id/imgMain"
@@ -90,10 +97,10 @@
 
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:src="@drawable/puzzle_game_by_androizzlers_no_background"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="-8dp"
                 android:layout_marginBottom="-50dp"
-                android:layout_gravity="bottom">
+                android:src="@drawable/puzzle_game_by_androizzlers_no_background">
 
             </ImageView>
 
@@ -106,11 +113,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/button_style"
-            android:textColor="@color/black"
-            android:textSize="20dp"
             android:fontFamily="@font/chewy"
             android:onClick="goGame"
-            android:text="@string/btnGame" />
+            android:text="@string/btnGame"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/bntScore"
@@ -119,14 +126,26 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_style"
-            android:textColor="@color/black"
-            android:textSize="20dp"
             android:fontFamily="@font/chewy"
             android:onClick="puzzleScore"
-            android:text="@string/btnScore" />
+            android:text="@string/btnScore"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="99dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginTop="60dp"
+            android:text="Sign In" />
+            <!--android:layout_marginBottom="60dp"-->
+
 
 
     </LinearLayout>
+
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
