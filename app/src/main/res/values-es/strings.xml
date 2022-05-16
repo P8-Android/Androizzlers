@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Puzzle</string>
+    <string name="main_img" translatable="false">Main_Img</string>
+    <string name="btnScore" translatable="false">Puntuaciones</string>
+    <string name="btnGame" translatable="false">Jugar</string>
+    <string name="txtFinish" translatable="false">Fin!</string>
+    <string name="txtMusic" translatable="false">Música</string>
+    <string name="txtSelMusic" translatable="false">Seleccionar múscia</string>
+    <string name="btnInfoBack" translatable="false">Volver</string>
+
+
+    <string name="secs" translatable="false">" segundos"</string>
+    <string name="finalTime" translatable="false">Tiempo final: </string>
+
+    <string name="puzzleList" translatable="false">Lista de puzzles</string>
+
+    <string name="info" translatable="false">Info</string>
+
+    <string name="signIn" translatable="false">Iniciar sesión</string>
+    <string name="signOut" translatable="false">Cerrar sesión</string>
+
+</resources>

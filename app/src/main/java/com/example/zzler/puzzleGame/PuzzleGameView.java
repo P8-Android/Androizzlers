@@ -487,7 +487,7 @@ protected void startTimer() {
                 public void run() {
                     if(!paused){
                         time++;
-                        txtTimeGame.setText(time.toString() + " Segundos");
+                        txtTimeGame.setText(time.toString() + context.getResources().getString(R.string.secs)); //pasamos el texto desde strings.xml para internacionalización
                         Log.i("interval",time.toString());
                     }else{
                         if(activateDB){
@@ -528,6 +528,7 @@ protected void startTimer() {
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
 
         txtTimeGame.setText("Tiempo final: "+timeString);
+        //txtTimeGame.setText(this.getResources().getString(R.string.finalTime) + timeString); //pasamos el texto desde strings.xml para internacionalización
         return timeString;
 
     }

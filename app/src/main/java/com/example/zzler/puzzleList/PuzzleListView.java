@@ -39,7 +39,7 @@ public class PuzzleListView extends AppCompatActivity {
         setContentView(R.layout.activity_puzzle_list);
 
         Toolbar toolbarGameList = findViewById(R.id.toolbar_game_list);
-        toolbarGameList.setTitle("Puzzle List");
+        toolbarGameList.setTitle(this.getResources().getString(R.string.puzzleList)); //pasamos el texto desde strings.xml para internacionalización
         setSupportActionBar(toolbarGameList);
 
         Intent i = new Intent(this, PuzzleGameView.class);

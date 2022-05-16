@@ -57,7 +57,7 @@
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:text="Sign Out"
+        android:text="@string/signOut"
         android:layout_marginBottom="30dp"/>
 
     <LinearLayout
@@ -138,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:layout_marginTop="60dp"
-            android:text="Sign In" />
+            android:text="@string/signIn" />
             <!--android:layout_marginBottom="60dp"-->
 
 
