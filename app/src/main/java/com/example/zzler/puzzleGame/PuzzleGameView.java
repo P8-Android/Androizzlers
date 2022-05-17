@@ -198,7 +198,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
 
         int timeTo = (int) timeToSolved;
-        String score = " Score: " + (long) timeTo + " seg";
+        String score = " Score: " + (long) timeToSolved + " seg";
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
@@ -240,6 +240,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
 
     public boolean isNewRecord(int level, int score){
         int bestScoreStore = getScoreCalendar(level);
+        Log.i("isNewRecord", "BEST SCORE OBTAINED " + bestScoreStore);
         return bestScoreStore < score?false: true;
     }
 
@@ -251,7 +252,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
                 String level = "Level " + i;
                 bestScoreLevels.put(level, getScoreCalendar(i));
             }
-        //Log.i("TAG","" + bestScoreLevels.toString());
+        Log.i("BestScoreLevel","" + bestScoreLevels.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -273,14 +274,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         final int PROJECTION_DTSTART_INDEX = 2;
         final int PROJECTION_DTEND_INDEX = 3;
 
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2020, 3, 18, 0, 0);
-        long startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, 3, 24, 0, 0);
-        long endMillis = endTime.getTimeInMillis();
-
-        String where = "( (title LIKE \'Puzzle%\') AND (calendar_id = " + 1 + "))";
+        String where = "( (title LIKE \'Level%\') AND (calendar_id = " + 1 + "))";
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
@@ -289,9 +283,10 @@ private static final int PERMISSION_READ_CALENDAR = 0;
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String fullInfo = cursor.getString(PROJECTION_TITLE_INDEX);
-                    String score = fullInfo.split(" ")[3];
+                    //Log.i("TAG","fullInfo" + fullInfo);
+                    String score = fullInfo.split(" ")[4];
                     Log.i("score", score);
-                    String level = fullInfo.split(" ")[0].split("#")[1];
+                    String level = fullInfo.split(" ")[1].split("#")[1];
                     Log.i("level", level);
                     if (Integer.parseInt(level) == levelToEvaluate){
                         Log.i("GetMaxScore", level);
@@ -518,8 +513,9 @@ protected void startTimer() {
 
                 private void stop() {
                     try{
-                        if (isNewRecord(count,time))
+                        if (isNewRecord(count,time)){
                             createNotification();
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
