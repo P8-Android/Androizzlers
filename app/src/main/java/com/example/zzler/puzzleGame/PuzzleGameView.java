@@ -72,6 +72,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.zzler.main.MainActivity;
 import com.example.zzler.R;
+import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
 
@@ -157,7 +158,6 @@ private static final int PERMISSION_READ_CALENDAR = 0;
     @Override
     protected void onPause() {
         super.onPause();
-        afterClickTimerCollection.get(countToTimer).cancel();
         mediaPlayer.pause();
     }
 
@@ -167,7 +167,11 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         mediaPlayer.start();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -418,10 +422,11 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         });
 
 
-
+        // Creamos el puzzle por primera vez con level 1
         puzzleImageView.post(new Runnable() {
             @Override
             public void run() {
+                count = 1;
                 try {
                     pieces = splitImage(dificulty,urlImg);
                 } catch (IOException e) {
@@ -502,9 +507,9 @@ protected void startTimer() {
                             long id = (long) saveScore("Level #"+count, time);
                             saveScoreInCalendar ("Level #"+count, time);
                             if(id > 0){
-                                Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PuzzleGameView.this, "Values inserted in Local BD!", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PuzzleGameView.this, "Error when inserting values in local BD", Toast.LENGTH_LONG).show();
                             }
                         }
                         stop();
