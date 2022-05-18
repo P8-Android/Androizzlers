@@ -1,11 +1,14 @@
 package com.example.zzler.puzzleList;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +19,8 @@ import android.os.Parcelable;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,6 +36,7 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
+
 
 
     @Override
@@ -49,7 +55,6 @@ public class PuzzleListView extends AppCompatActivity {
 
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
-
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
@@ -142,13 +147,17 @@ public class PuzzleListView extends AppCompatActivity {
         }
 
 
-
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+
             if (convertView == null) {
+
                 imgV = new ImageView(context);
                 imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imgV.setLayoutParams(new GridView.LayoutParams(250, 400));
+
+
             } else {
                 imgV = (ImageView) convertView;
             }
@@ -156,9 +165,12 @@ public class PuzzleListView extends AppCompatActivity {
                 InputStream ims = context.getAssets().open("img/" + list[position]);
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
                 imgV.setImageBitmap(bitmap);
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
 
             return imgV;
         }}

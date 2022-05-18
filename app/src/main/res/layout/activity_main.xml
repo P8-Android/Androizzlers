@@ -15,7 +15,6 @@
         app:titleTextAppearance="@style/TextAppearance.AppCompat.Headline"
         android:theme="@style/Theme.Zzler"
         app:popupTheme="@style/Theme.Zzler">
-
     </androidx.appcompat.widget.Toolbar>
 
 

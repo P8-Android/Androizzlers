@@ -479,6 +479,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
                 if (b){
                     if(!mediaPlayer.isPlaying()){
                         mediaPlayer.start();
+
                     }
                 }
             }
