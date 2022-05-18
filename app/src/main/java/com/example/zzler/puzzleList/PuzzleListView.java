@@ -1,11 +1,15 @@
 package com.example.zzler.puzzleList;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,10 +20,15 @@ import android.os.Parcelable;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.widget.AbsListView;
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -31,6 +40,8 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
+
+    private static final int PERMISSION_CAMERA = 0;
 
 
     @Override
@@ -68,7 +79,20 @@ public class PuzzleListView extends AppCompatActivity {
                 final int REQUEST_IMAGE_CAPTURE = 2;
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    try {
+
+                        ActivityCompat.requestPermissions(PuzzleListView.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
+
+                        if (ContextCompat.checkSelfPermission(PuzzleListView.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                            Log.i("CAMERA", "Permission was granted");
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        }else{
+                            Log.i("CAMERA", "Permission was not granted");
+                        }
+                    } catch (Throwable t) {
+                        Log.i("CAMERA", "Error opening camera");
+                    }
+
                 }
 
             }

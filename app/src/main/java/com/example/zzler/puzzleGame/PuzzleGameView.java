@@ -96,7 +96,7 @@ import java.util.TimeZone;
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
 
     private static final int PERMISSION_WRITE_CALENDAR = 0;
-private static final int PERMISSION_READ_CALENDAR = 0;
+    private static final int PERMISSION_READ_CALENDAR = 0;
     private Float timeGameSolved;
     private PuzzleGamePresenterImpl gamePresenter;
     protected static Integer dificulty;
