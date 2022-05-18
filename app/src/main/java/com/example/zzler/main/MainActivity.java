@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
+import com.example.zzler.puzzleList.CloudImg;
 import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.webView.Info;
@@ -161,5 +162,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 statusTextView.setText("Signed out");
             }
         });
+    }
+
+    //Firebase Storage - Cloud images
+    public void showCloudImg (View v){
+        Intent i = new Intent (this, CloudImg.class);
+        startActivity(i);
     }
 }

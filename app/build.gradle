@@ -39,12 +39,16 @@ apply plugin: 'com.google.gms.google-services'
 
 dependencies {
 
-    //Firebase SDK - Start
+    //Firebase SDK
     implementation platform('com.google.firebase:firebase-bom:30.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
-    //Firebase SDK - End
+    //Firebase Storage
+    implementation 'com.google.firebase:firebase-storage:20.0.1'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
