@@ -4,16 +4,19 @@ package com.example.zzler.puzzleGame;
 import static java.lang.Math.abs;
 import static java.lang.Math.toRadians;
 
+import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.zzler.main.MainActivity;
 import android.annotation.SuppressLint;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -155,6 +158,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(notificationChannel);
     }
+
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -162,9 +167,41 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        Intent i = new Intent(this, PuzzleListView.class);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("Puzzle Interrumpido");
+        builder.setMessage("Es necesario comenzar nuevo puzzle");
+        builder.setNeutralButton(
+                R.string.newPuzzle,
+                new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(i);
+                    }
+                });
+        builder.create();
+
+        afterClickTimerCollection.get(countToTimer).cancel();
+        TouchListener.countToShowFinishMsg=0;
+        builder.show(); // No permite jugar con la música nueva
+
+        if(flagMusic){ // Si he cambiado la música no me muestres el dialogo que bloquea
+            Log.i("Musica", "se ha cambiado la musica");
+            //builder.show();
+            flagMusic = false;
+        }
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
+
     }
 
     @Override
@@ -355,6 +392,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         mapImg = new MapImg();
         mapImgToSplit = mapImg.mapImgToSplit;
         animationPiece = new AnimationPiece(c);
+        flagMusic = false;
 
 
 
@@ -445,18 +483,16 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
 
     }
-
+    Boolean flagMusic = false;
  @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2
                 && resultCode == Activity.RESULT_OK) {
-            Log.i("*******","ha pasado por aqui");
-            // The result data contains a URI for the document or directory that
-            // the user selected.
             Uri uri = null;
             if (data != null) {
+                flagMusic = true;
                 uri = data.getData();
                 urlSong = uri;
                 if (urlSong!=null){
@@ -598,6 +634,7 @@ MapImg mapImg;
         //mapImgToSplit.put(img,false);
 
         if (getIntent().getParcelableExtra("photo")!=null){
+            pieces.removeAll(pieces);
             bitmap = getIntent().getParcelableExtra("photo");
             Drawable d = new BitmapDrawable(getResources(), bitmap);
             puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -605,7 +642,7 @@ MapImg mapImg;
             puzzleImageView.setImageDrawable(d);
             //imageView.setImageBitmap(bitmap);
         }else if(getIntent().getParcelableExtra("photoGallery")!=null){
-            //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
+            pieces.removeAll(pieces);
             Uri uri = getIntent().getParcelableExtra("photoGallery");
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
             Drawable d = new BitmapDrawable(getResources(), bitmap);

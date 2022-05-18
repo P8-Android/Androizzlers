@@ -6,4 +6,5 @@
     <string name="txtFinish" translatable="false">Finish!</string>
     <string name="btnInfoBack" translatable="false">Volver</string>
     <string name="info" translatable="false">Info</string>
+    <string name="newPuzzle">Puzzle Nuevo</string>
 </resources>
