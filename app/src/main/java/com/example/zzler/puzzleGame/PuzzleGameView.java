@@ -163,6 +163,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     @Override
     protected void onPause() {
         super.onPause();
+
         mediaPlayer.pause();
     }
 
@@ -185,14 +186,15 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
                 });
         builder.create();
 
-        afterClickTimerCollection.get(countToTimer).cancel();
-        TouchListener.countToShowFinishMsg=0;
-        builder.show(); // No permite jugar con la música nueva
 
-        if(flagMusic){ // Si he cambiado la música no me muestres el dialogo que bloquea
+        //builder.show(); // No permite jugar con la música nueva
+
+        if(flagMusic){ // Si es true se ha cambiado la musica. Mientras no la haya cambiado no muestres el dialog
             Log.i("Musica", "se ha cambiado la musica");
-            //builder.show();
-            flagMusic = false;
+            afterClickTimerCollection.get(countToTimer).cancel();
+            TouchListener.countToShowFinishMsg=0;
+            builder.show();
+
         }
 
     }
@@ -403,6 +405,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     btnSelectSong.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                flagMusic = false;
                 final int PICK_MP3_FILE = 2;
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -490,9 +493,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2
                 && resultCode == Activity.RESULT_OK) {
+            flagMusic = true;
             Uri uri = null;
             if (data != null) {
-                flagMusic = true;
+
                 uri = data.getData();
                 urlSong = uri;
                 if (urlSong!=null){
