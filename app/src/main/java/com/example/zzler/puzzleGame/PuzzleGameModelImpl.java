@@ -6,17 +6,22 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.widget.ImageView;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
+
 import androidx.annotation.RequiresApi;
 
+import com.example.zzler.score.Score;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
-public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGameModel {
+public class PuzzleGameModelImpl  implements IPuzzleGameModel {
 
     private PuzzleGamePresenterImpl gamePresenter;
 
@@ -25,27 +30,8 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
     public static final String TABLE_NAME = "t_score";
     Context context;
 
-    public PuzzleGameModelImpl(@Nullable Context context) {
-        super(context,DATABASE_NAME, null, DATABASE_VERSION );
-        this.context = context;
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "puzzleName TEXT NOT NULL," +
-                "timeToSolved REAL NOT NULL," +
-                "fecha TEXT NOT NULL" + ")"
-                );
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE " + TABLE_NAME);
-        onCreate(sqLiteDatabase);
-    }
-
+    //prod3
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -53,8 +39,23 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
 
     }
 
+    @Override
+    public long saveScoreToBBDD(Score score) {
+        mDatabase = FirebaseDatabase.getInstance("https://p8-prod3-7852e-default-rtdb.firebaseio.com")
+                .getReference();
+        String user = "UserProbe";
+        //save in firebase
+        Map<String, Score> scoreMap = new HashMap<>();
+        scoreMap.put(user, score);
+
+        mDatabase.setValue("hello world");
+
+        return 0;
+
+    }
 
 
+/*
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public long saveScoreToBBDD(String puzzleName, float timeToSolved) {
@@ -80,6 +81,8 @@ public class PuzzleGameModelImpl extends SQLiteOpenHelper implements IPuzzleGame
         }
         return id;
     }
+
+ */
 
 
 }

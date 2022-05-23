@@ -20,11 +20,11 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-/*Firebase SDK - Start
+//Firebase SDK - Start
 allprojects {
     repositories {
         google()
         jcenter()
     }
 }
-//Firebase SDK - End*/
+//Firebase SDK - End
