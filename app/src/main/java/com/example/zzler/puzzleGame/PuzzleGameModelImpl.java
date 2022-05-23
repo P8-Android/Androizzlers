@@ -48,7 +48,7 @@ public class PuzzleGameModelImpl  implements IPuzzleGameModel {
         Map<String, Score> scoreMap = new HashMap<>();
         scoreMap.put(user, score);
 
-        mDatabase.setValue("hello world");
+        mDatabase.setValue(scoreMap);
 
         return 0;
 
