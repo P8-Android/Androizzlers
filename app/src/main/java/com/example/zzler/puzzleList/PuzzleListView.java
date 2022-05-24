@@ -2,27 +2,34 @@ package com.example.zzler.puzzleList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import android.widget.AbsListView;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 public class PuzzleListView extends AppCompatActivity {
@@ -31,6 +38,9 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
+    DatabaseReference mdataRef;
+    private ArrayList<String> imagesPuzzles;
+    FirebaseDatabase dataBase;
 
 
     @Override
@@ -44,25 +54,29 @@ public class PuzzleListView extends AppCompatActivity {
 
         Intent i = new Intent(this, PuzzleGameView.class);
         imgV = null;
-        gridView  =  findViewById(R.id.grid_image_puzzle);
-        ImageAdapter gridAdapter =(new ImageAdapter(this));
+        gridView = findViewById(R.id.grid_image_puzzle);
+        dataBase = FirebaseDatabase.getInstance();
+        mdataRef = dataBase.getReference().child("images");
+
+        GetAll
+        ImageAdapter gridAdapter = (new ImageAdapter(this, imagesPuzzles));
 
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
 
         gridView.setAdapter(gridAdapter);
-        gridView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                View imgView = gridAdapter.getItem();
+                //View imgView = gridAdapter.getItem();
                 Bundle bundle = new Bundle();
-                bundle.putInt("pos",pos);
+                bundle.putInt("pos", pos);
                 i.putExtras(bundle);
                 startActivity(i);
                 finish();
             }
         });
 
-        cameraButton.setOnClickListener(new View.OnClickListener(){
+        cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final int REQUEST_IMAGE_CAPTURE = 2;
@@ -74,7 +88,7 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });
 
-        galleryButton.setOnClickListener(new View.OnClickListener(){
+        galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -112,60 +126,64 @@ public class PuzzleListView extends AppCompatActivity {
 
     public class ImageAdapter extends BaseAdapter {
 
-    private Context context;
-    private String[] list;
+        private StorageReference storageReference;
+        private FirebaseStorage firebaseStorage;
+        ArrayList<String> imagesPuzzleArrayList;
+        private Context context;
 
-    public ImageAdapter(Context c) {
-        context = c;
-        try {
-            list = context.getAssets().list("img");
-        } catch (IOException e) {
-            e.printStackTrace();
+        public ImageAdapter(Context c, ArrayList<String> imagesPuzzleArrayList) {
+
+            this.context = c;
+            this.imagesPuzzleArrayList = imagesPuzzleArrayList;
         }
-    }
 
         public int getCount() {
-        return list.length;
+            return imagesPuzzleArrayList.size();
         }
 
-        @Override
-        public Object getItem(int i) {
+
+        public Object getItem(int position) {
             return null;
         }
 
-        public View getItem() {
-            return imgV;
-        }
-
         public long getItemId(int position) {
-        return 0;
+            return 0;
         }
-
 
 
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if (convertView == null) {
-                imgV = new ImageView(context);
-                imgV.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgV.setLayoutParams(new GridView.LayoutParams(250, 400));
-            } else {
-                imgV = (ImageView) convertView;
-            }
-            try {
-                InputStream ims = context.getAssets().open("img/" + list[position]);
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                imgV.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            return imgV;
-        }}
+            LayoutInflater layoutInflater = getLayoutInflater();
+            View view = layoutInflater.inflate(R.layout.activity_puzzle_list, null);
+            ImageView imageView = (ImageView) view.findViewById(R.id.image_grid);
+            Picasso.with(getApplicationContext()).load(imagesPuzzleArrayList.get(position)).into(imageView);
+            return view;
+        }
 
 
+        public void GetAllImages() {
+
+            mdataRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds: snapshot.getChildren()) {
+                        imagesPuzzleArrayList.add(ds.child("image").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
 
 
+        }
+
+
+    }
 
 }
+
 

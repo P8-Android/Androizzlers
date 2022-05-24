@@ -46,7 +46,7 @@
         <activity android:name=".score.ScoreView">
 
         </activity>
-        <activity android:name=".puzzleList.CloudImg" />
+        <activity android:name=".puzzleList.FirebaseHelper" />
 
         <meta-data
             android:name="preloaded_fonts"
