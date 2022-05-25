@@ -68,6 +68,7 @@ import androidx.core.content.ContextCompat;
 import com.example.zzler.main.MainActivity;
 import com.example.zzler.R;
 import com.example.zzler.score.ScoreView;
+import com.example.zzler.score.Score;
 import com.example.zzler.webView.Info;
 
 import org.json.JSONException;
@@ -80,6 +81,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.HashMap;
 import java.util.Timer;
@@ -185,50 +187,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         startActivity(i);
     }
 
-    @Override
-    public void saveScoreInCalendar(String puzzleName, float timeToSolved) {
-        Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
-
-        int timeTo = (int) timeToSolved;
-        String score = " Score: " + (long) timeTo + " seg";
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-
-        Calendar beg = Calendar.getInstance();
-        beg.add(Calendar.SECOND, -timeTo);
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-        beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-
-        ContentResolver cr = context.getContentResolver();
-        ContentValues cv = new ContentValues();
-            cv.put("calendar_id", 1);
-            cv.put("title", puzzleName + " " + score);
-            cv.put("description", score);
-            TimeZone tz = cal.getTimeZone();
-            cv.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
-            cv.put("dtstart", beg.getTimeInMillis());
-            cv.put("dtend", cal.getTimeInMillis());
-
-        try {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, PERMISSION_WRITE_CALENDAR);
-
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);
-                long eventID = Long.parseLong(uri.getLastPathSegment());
-                Toast.makeText(this, "Se ha insetado la puntuación en el calendario", Toast.LENGTH_LONG).show();
-                Log.i("SAVESCOREINCALENDAR", "Permission was granted");
-            }else{
-                Toast.makeText(this, "No se han aceptado los permisos para guardar la puntuación en el calendario", Toast.LENGTH_LONG).show();
-                Log.i("SAVESCOREINCALENDAR", "Permission was not granted");
-            }
-        } catch (Throwable t) {
-            Log.i("SAVESCOREINCALENDAR", "Error saving in Calendar");
-            Log.i("SAVESCOREINCALENDAR", String.valueOf(t));
-            Toast.makeText(this, "No se ha podido grabar la puntuación en el calendario", Toast.LENGTH_LONG).show();
-        }
-    }
+    
 
     public boolean isNewRecord(int level, int score){
         int bestScoreStore = getScoreCalendar(level);
@@ -491,21 +450,23 @@ protected void startTimer() {
                         Log.i("interval",time.toString());
                     }else{
                         if(activateDB){
-                            long id = (long) saveScore("Level #"+count, time);
+                            saveScore("Level #"+count, time, new Date(System.currentTimeMillis()));
+                            /*
                             saveScoreInCalendar ("Level #"+count, time);
                             if(id > 0){
                                 Toast.makeText(PuzzleGameView.this, "Values inserted!", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(PuzzleGameView.this, "Error when inserting values", Toast.LENGTH_LONG).show();
                             }
+
+                             */
                         }
                         stop();
                     }
                 }
 
                 private void stop() {
-                    if (isNewRecord(count,time))
-                        createNotification();
+
                     TouchListener.setCountToShowFinishMsg(0);
                     time = 0;
                     afterClickTimerCollection.get(countToTimer).cancel();
@@ -815,10 +776,11 @@ MapImg mapImg;
     }
 
     @Override
-    public float saveScore(String puzzleName, float timeToSolved) {
-        long id = gamePresenter.saveScore(puzzleName, timeToSolved, context);
+    public void saveScore(String puzzleName, float timeToSolved, Date date) {
+        gamePresenter.saveScore(new Score(puzzleName,timeToSolved,date));
+        //long id = gamePresenter.saveScore(puzzleName, timeToSolved, context);
         this.activateDB = false;
-        return id;
+        //return id;
     }
 
     public void splitPuzzleImage (ImageView img){
