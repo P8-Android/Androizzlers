@@ -29,14 +29,23 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-    //Firebase Auth
-    SignInButton signInButton;
+    //Firebase Auth - reemplazado por BUTTERKNIFE
+
+    /*SignInButton signInButton;
     Button signOutButton;
-    TextView statusTextView;
+    TextView statusTextView;*/
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
+
+    //Librería externa BUTTERKNIFE
+    @BindView(R.id.status_textview) TextView statusTextView;
+    @BindView(R.id.sign_in_button) SignInButton signInButton;
+    @BindView(R.id.signOutButton) Button signOutButton;
 
 
     @Override
@@ -68,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Librería externa BUTTERKNIFE
+        ButterKnife.bind(this);
 
         Toolbar toolbarMain = findViewById(R.id.toolbar_main);
         toolbarMain.setTitle("Puzzle Game");
@@ -82,11 +93,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        statusTextView = (TextView) findViewById(R.id.status_textview);
+
+        //Librería externa BUTTERKNIFE - código sin BUTTERKNIFE (reemplazado)
+
+        /*statusTextView = (TextView) findViewById(R.id.status_textview);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
 
         signOutButton = (Button) findViewById(R.id.signOutButton);
+        signOutButton.setOnClickListener(this);*/
+
+        //Librería externa BUTTERKNIFE - código con BUTTERKNIFE
+        signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
     }
 
