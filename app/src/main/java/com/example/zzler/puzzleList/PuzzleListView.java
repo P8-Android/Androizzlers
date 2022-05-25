@@ -38,9 +38,9 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
-    DatabaseReference mdataRef;
-    private ArrayList<String> imagesPuzzles;
-    FirebaseDatabase dataBase;
+    ArrayList<String> imagesPuzzles = new ArrayList<String>();
+    private ImageAdapter imageAdapter;
+    DatabaseReference databaseReference;
 
 
     @Override
@@ -55,12 +55,12 @@ public class PuzzleListView extends AppCompatActivity {
         Intent i = new Intent(this, PuzzleGameView.class);
         imgV = null;
         gridView = findViewById(R.id.grid_image_puzzle);
-        dataBase = FirebaseDatabase.getInstance();
-        mdataRef = dataBase.getReference().child("images");
 
-        GetAll
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        getAllImages();
+
         ImageAdapter gridAdapter = (new ImageAdapter(this, imagesPuzzles));
-
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
 
@@ -126,8 +126,6 @@ public class PuzzleListView extends AppCompatActivity {
 
     public class ImageAdapter extends BaseAdapter {
 
-        private StorageReference storageReference;
-        private FirebaseStorage firebaseStorage;
         ArrayList<String> imagesPuzzleArrayList;
         private Context context;
 
@@ -138,7 +136,7 @@ public class PuzzleListView extends AppCompatActivity {
         }
 
         public int getCount() {
-            return imagesPuzzleArrayList.size();
+            return this.imagesPuzzleArrayList.size();
         }
 
 
@@ -153,7 +151,6 @@ public class PuzzleListView extends AppCompatActivity {
 
         public View getView(int position, View convertView, ViewGroup parent) {
 
-
             LayoutInflater layoutInflater = getLayoutInflater();
             View view = layoutInflater.inflate(R.layout.activity_puzzle_list, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_grid);
@@ -162,24 +159,29 @@ public class PuzzleListView extends AppCompatActivity {
         }
 
 
-        public void GetAllImages() {
 
-            mdataRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot ds: snapshot.getChildren()) {
-                        imagesPuzzleArrayList.add(ds.child("image").getValue().toString());
-                    }
+    }
+
+
+
+
+
+
+    public void getAllImages() {
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    imagesPuzzles.add(ds.child("images").getValue().toString());
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
-
-        }
+            }
+        });
 
 
     }
