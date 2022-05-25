@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +20,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -42,6 +49,34 @@ public class PuzzleListView extends AppCompatActivity {
     private ImageAdapter imageAdapter;
     DatabaseReference databaseReference;
 
+
+
+
+    //STORAGE
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
+
+    // Create a reference with an initial file path and name
+    StorageReference pathReference = storageRef.child("images/");
+
+    // Create a reference to a file from a Google Cloud Storage URI
+    /*
+    StorageReference gsReference0 = storage.getReferenceFromUrl("gs://bucket/images/doctor_strange.jpg");
+    StorageReference gsReference1 = storage.getReferenceFromUrl("gs://bucket/images/gandalf.jpg");
+    StorageReference gsReference2 = storage.getReferenceFromUrl("gs://bucket/gandalf_vs_demond.jpg");
+    StorageReference gsReference3 = storage.getReferenceFromUrl("gs://bucket/images/groot.jpg");
+    StorageReference gsReference4 = storage.getReferenceFromUrl("gs://bucket/images/hobbit_house.jpg");
+    StorageReference gsReference5 = storage.getReferenceFromUrl("gs://bucket/images/hulk.jpg");
+    StorageReference gsReference6 = storage.getReferenceFromUrl("gs://bucket/images/star_lord.jpg");
+
+     */
+
+
+    // Create a reference from an HTTPS URL
+    // Note that in the URL, characters are URL escaped!
+    //StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +134,52 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });
 
+        ///DESCARGA POR PATH
+        /*
+        storageRef.child("/images/doctor_strange.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Log.i("STORAGEEEE", "onSuccess");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("STORAGEEEE", "onFailure");
+            }
+        });
+
+ */
+
+        //CREAR UN ARCHIVO TEMPORAL
+        StorageReference doctorStrange = storageRef.child("images/doctor_strange.jpg");
+
+        File localFile = null;
+        try {
+            localFile = File.createTempFile("images", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        doctorStrange.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+                Log.i("STORAGEEEE", "onSuccess");
+
+                //MANEJAR EL ARCHIVO TEMPORAL PARA INCLUIRLO EN EL GRID
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("STORAGEEEE", "onFailure");
+            }
+        });
+
+
+
     }
 
     @Override
@@ -154,18 +235,10 @@ public class PuzzleListView extends AppCompatActivity {
             LayoutInflater layoutInflater = getLayoutInflater();
             View view = layoutInflater.inflate(R.layout.activity_puzzle_list, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_grid);
-            Picasso.with(getApplicationContext()).load(imagesPuzzleArrayList.get(position)).into(imageView);
+            //Picasso.with(getApplicationContext()).load(imagesPuzzleArrayList.get(position)).into(imageView);
             return view;
         }
-
-
-
     }
-
-
-
-
-
 
     public void getAllImages() {
 
@@ -173,7 +246,7 @@ public class PuzzleListView extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds: snapshot.getChildren()) {
-                    imagesPuzzles.add(ds.child("images").getValue().toString());
+                    //imagesPuzzles.add(ds.child("/images").getValue().toString());
                 }
             }
 
