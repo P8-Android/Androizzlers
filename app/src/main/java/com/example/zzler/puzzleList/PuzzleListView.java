@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,25 +25,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
-import com.example.zzler.score.ScoreListAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
+import com.google.firebase.storage.FirebaseStorage;
+
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,19 +52,43 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
-    ArrayList<String> imagesPuzzles;
     private ImageAdapter imageAdapter;
     StorageReference storageReference;
-
-    private RecyclerView mRecyclerView;
-    private ImageAdapter mAdapter;
-
-    private ProgressBar progressBar;
-
+    Context context;
+    private RecyclerView recyclerView;
     private DatabaseReference mDatabaseRef;
     private List<ItemImage> itemImages;
 
+    StorageReference imagesRef = FirebaseStorage.getInstance().getReference();
    
+
+
+
+    //STORAGE
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
+
+    // Create a reference with an initial file path and name
+    StorageReference pathReference = storageRef.child("images/");
+
+    // Create a reference to a file from a Google Cloud Storage URI
+    /*
+    StorageReference gsReference0 = storage.getReferenceFromUrl("gs://bucket/images/doctor_strange.jpg");
+    StorageReference gsReference1 = storage.getReferenceFromUrl("gs://bucket/images/gandalf.jpg");
+    StorageReference gsReference2 = storage.getReferenceFromUrl("gs://bucket/gandalf_vs_demond.jpg");
+    StorageReference gsReference3 = storage.getReferenceFromUrl("gs://bucket/images/groot.jpg");
+    StorageReference gsReference4 = storage.getReferenceFromUrl("gs://bucket/images/hobbit_house.jpg");
+    StorageReference gsReference5 = storage.getReferenceFromUrl("gs://bucket/images/hulk.jpg");
+    StorageReference gsReference6 = storage.getReferenceFromUrl("gs://bucket/images/star_lord.jpg");
+
+     */
+
+
+    // Create a reference from an HTTPS URL
+    // Note that in the URL, characters are URL escaped!
+    //StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,31 +102,18 @@ public class PuzzleListView extends AppCompatActivity {
         Intent i = new Intent(this, PuzzleGameView.class);
         imgV = null;
 
-        mRecyclerView=findViewById(R.id.recycler_list_puzzle);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(PuzzleListView.this));
+        itemImages = new ArrayList<>();
+        recyclerView = findViewById(R.id.recycler_list_puzzle);
 
-        itemImages =new ArrayList<>();
-        mDatabaseRef= FirebaseDatabase.getInstance().getReference("images");
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapshot:dataSnapshot.getChildren())
-                {
-                    ItemImage itemimg = postSnapshot.getValue(ItemImage.class);
-                    itemImages.add(itemimg);
-                }
-                mAdapter = new ImageAdapter(PuzzleListView.this, itemImages);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
 
 
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+
+        getDataFromFirebase();
 
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
@@ -147,7 +157,86 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });
 
+        ///DESCARGA POR PATH
+
+     /*   storageRef.child("/images/doctor_strange.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Log.i("STORAGEEEE", "onSuccess");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("STORAGEEEE", "onFailure");
+            }
+        });*/
+
+
+
+       /* //CREAR UN ARCHIVO TEMPORAL
+        StorageReference doctorStrange = storageRef.child("images/doctor_strange.jpg");
+
+        File localFile = null;
+        try {
+            localFile = File.createTempFile("images", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        doctorStrange.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+                Log.i("STORAGEEEE", "onSuccess");
+
+                //MANEJAR EL ARCHIVO TEMPORAL PARA INCLUIRLO EN EL GRID
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("STORAGEEEE", "onFailure");
+            }
+        });*/
+
+
+
+
+
+
     }
+
+    private void getDataFromFirebase() {
+
+        Query query = mDatabaseRef.child("images");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    ItemImage itemImage = new ItemImage();
+                    itemImage.setImgUrl(dataSnapshot.child("image").getValue().toString());
+                    itemImages.add(itemImage);
+
+                }
+
+                ImageAdapter imgAdapter = new ImageAdapter(context, itemImages);
+                recyclerView.setAdapter(imgAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -175,11 +264,11 @@ public class PuzzleListView extends AppCompatActivity {
     public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
         private Context context;
-        private List<ItemImage> imagesItems;
+        private List<ItemImage> imagesUrls;
 
-        public ImageAdapter(Context context, List<ItemImage> imagesItems) {
+        public ImageAdapter(Context context, List<ItemImage> imagesUrls) {
             this.context = context;
-            this.imagesItems = imagesItems;
+            this.imagesUrls = imagesUrls;
 
         }
 
@@ -190,7 +279,6 @@ public class PuzzleListView extends AppCompatActivity {
 
             public ImageViewHolder(@NonNull View itemView) {
                 super(itemView);
-
                 imageView = findViewById(R.id.image_grid);
             }
         }
@@ -200,22 +288,23 @@ public class PuzzleListView extends AppCompatActivity {
         @Override
         public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-            View v=LayoutInflater.from(context).inflate(R.layout.activity_puzzle_list, parent,false);
-            return  new ImageViewHolder(v);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_puzzle_list, parent, false);
+
+            return new ImageViewHolder(view);
+
         }
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-            ItemImage item = imagesItems.get(position);
-            Picasso.with(context).
-                    load(item.getImgUrl()).
-                    into(holder.imageView);
+
+            Glide.with(context).load(imagesUrls.get(position).getImgUrl())
+                    .into(holder.imageView);
 
         }
 
         @Override
         public int getItemCount() {
-            return imagesItems.size();
+            return imagesUrls.size();
         }
 
 
@@ -225,6 +314,8 @@ public class PuzzleListView extends AppCompatActivity {
 
 
 }
+
+
 
 
 

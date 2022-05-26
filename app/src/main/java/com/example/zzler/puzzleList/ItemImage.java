@@ -9,10 +9,7 @@ public class ItemImage {
     }
 
     public ItemImage(String imgName, String imgUrl) {
-        if(imgName.trim().equals(""))
-        {
-            imgName="No name";
-        }
+
         this.imgName = imgName;
         this.imgUrl = imgUrl;
     }
