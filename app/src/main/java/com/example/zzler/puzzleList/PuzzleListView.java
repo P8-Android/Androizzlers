@@ -3,6 +3,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -26,9 +27,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
 
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.firebase.database.DataSnapshot;
@@ -41,26 +46,37 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PuzzleListView extends AppCompatActivity {
 
-    private GridView gridView;
+
     ImageView imgV;
-    FloatingActionButton cameraButton;
-    FloatingActionButton galleryButton;
     private ImageAdapter imageAdapter;
     StorageReference storageReference;
     Context context;
     private RecyclerView recyclerView;
-    private DatabaseReference mDatabaseRef;
+    private StorageReference mDatabaseRef;
     private List<ItemImage> itemImages;
 
+
+
+
+    private GridView gridView;
+    private ImageView img1;
+    private ImageView img2;
+    private ImageView img3;
+    private ImageView img4;
+    private ImageView img5;
+
+
     StorageReference imagesRef = FirebaseStorage.getInstance().getReference();
-   
+
 
 
 
@@ -74,12 +90,15 @@ public class PuzzleListView extends AppCompatActivity {
     StorageReference pathReference = storageRef.child("images/");
 
     // Create a reference to a file from a Google Cloud Storage URI
+
+    StorageReference gsReference0 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/doctor_strange.jpg");
+
+    StorageReference gsReference1 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/gandalf.jpg");
+
+    StorageReference gsReference2 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/gandalf_vs_demond.jpg");
+    StorageReference gsReference3 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/groot.jpg");
+    StorageReference gsReference4 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/hobbit_house.jpg");
     /*
-    StorageReference gsReference0 = storage.getReferenceFromUrl("gs://bucket/images/doctor_strange.jpg");
-    StorageReference gsReference1 = storage.getReferenceFromUrl("gs://bucket/images/gandalf.jpg");
-    StorageReference gsReference2 = storage.getReferenceFromUrl("gs://bucket/gandalf_vs_demond.jpg");
-    StorageReference gsReference3 = storage.getReferenceFromUrl("gs://bucket/images/groot.jpg");
-    StorageReference gsReference4 = storage.getReferenceFromUrl("gs://bucket/images/hobbit_house.jpg");
     StorageReference gsReference5 = storage.getReferenceFromUrl("gs://bucket/images/hulk.jpg");
     StorageReference gsReference6 = storage.getReferenceFromUrl("gs://bucket/images/star_lord.jpg");
 
@@ -102,21 +121,41 @@ public class PuzzleListView extends AppCompatActivity {
         Intent i = new Intent(this, PuzzleGameView.class);
         imgV = null;
 
-        itemImages = new ArrayList<>();
-        recyclerView = findViewById(R.id.recycler_list_puzzle);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
+        //itemImages = new ArrayList<>();
 
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        //recyclerView = findViewById(R.id.recycler_list_puzzle);
+
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        //recyclerView.setLayoutManager(layoutManager);
+        //recyclerView.setHasFixedSize(true);
+
+//        gridView = findViewById(R.id.gridList);
+        img1 = findViewById(R.id.img1);
+        img2 = findViewById(R.id.img2);
+        img3 = findViewById(R.id.img3);
+        img4 = findViewById(R.id.img4);
+        img5 = findViewById(R.id.img5);
+
+        mDatabaseRef = FirebaseStorage.getInstance().getReference();
+
+        Glide.with(this).load(gsReference0)
+               .into(img1);
+
+        Glide.with(this).load(gsReference1)
+                .into(img2);
+
+        Glide.with(this).load(gsReference2)
+                .into(img3);
+
+        Glide.with(this).load(gsReference3)
+                .into(img4);
+
+        Glide.with(this).load(gsReference4)
+                .into(img5);
 
 
-        getDataFromFirebase();
-
-        cameraButton = findViewById(R.id.cameraButton);
-        galleryButton = findViewById(R.id.galleryButton);
+        //getDataFromFirebase();
 
 
 
@@ -134,28 +173,7 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });*/
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final int REQUEST_IMAGE_CAPTURE = 2;
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
 
-            }
-        });
-
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-
-                startActivityForResult(intent, 9); //9 para diferenciar photo de camera de photo de galeria
-
-            }
-        });
 
         ///DESCARGA POR PATH
 
@@ -209,10 +227,14 @@ public class PuzzleListView extends AppCompatActivity {
     }
 
     private void getDataFromFirebase() {
+        ImageAdapter imgAdapter = new ImageAdapter(context);
+        recyclerView.setAdapter(imgAdapter);
 
-        Query query = mDatabaseRef.child("images");
+        StorageReference query = mDatabaseRef.child("/images");
 
-        query.addValueEventListener(new ValueEventListener() {
+        Log.i("NAME_FIREBASE",query.getBucket());
+                /*
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -224,8 +246,7 @@ public class PuzzleListView extends AppCompatActivity {
 
                 }
 
-                ImageAdapter imgAdapter = new ImageAdapter(context, itemImages);
-                recyclerView.setAdapter(imgAdapter);
+
 
             }
 
@@ -234,6 +255,7 @@ public class PuzzleListView extends AppCompatActivity {
 
             }
         });
+       */
 
     }
 
@@ -264,11 +286,11 @@ public class PuzzleListView extends AppCompatActivity {
     public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
         private Context context;
-        private List<ItemImage> imagesUrls;
+        //private List<ItemImage> imagesUrls;
 
-        public ImageAdapter(Context context, List<ItemImage> imagesUrls) {
+        public ImageAdapter(Context context) {
             this.context = context;
-            this.imagesUrls = imagesUrls;
+
 
         }
 
@@ -297,14 +319,14 @@ public class PuzzleListView extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
 
-            Glide.with(context).load(imagesUrls.get(position).getImgUrl())
+            Glide.with(context).load(gsReference0)
                     .into(holder.imageView);
 
         }
 
         @Override
         public int getItemCount() {
-            return imagesUrls.size();
+            return 0;
         }
 
 
