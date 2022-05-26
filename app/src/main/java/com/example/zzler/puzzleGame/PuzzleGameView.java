@@ -143,7 +143,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     StorageReference storageRef = storage.getReference();
 
     ArrayList<StorageReference> remoteFireImg;
-
+    ArrayList<File> files;
     private void createNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
         builder.setContentTitle("New or equal RECORD!!");
@@ -345,7 +345,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         }
 
 
-        ArrayList<File> files = new ArrayList<>();
+        files = new ArrayList<>();
         File outputFile = null;
         int b = 1;
         //File outputDir = this.getCacheDir(); // context being the Activity pointer
@@ -615,8 +615,8 @@ MapImg mapImg;
         //mapImgToSplit.put(img,false);
 
 
-            File fireImg1 = new File(context.getCacheDir(), "/images1");
-            String pathName = fireImg1.toString();
+            File fireImg1 = new File(context.getCacheDir(), files.get(0).toString());
+            String pathName = fireImg1.getPath().replace("jpg",".jpg");
             Drawable d = Drawable.createFromPath(pathName);
             bitmap = BitmapFactory.decodeFile(pathName);
             //Drawable d = new BitmapDrawable(getResources(), bitmap);
