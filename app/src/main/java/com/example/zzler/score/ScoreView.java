@@ -11,15 +11,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.zzler.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import android.widget.ImageView;
 
 public class ScoreView extends AppCompatActivity {
 
-    private ArrayList<ScoreView> scoreList;
+    private ArrayList<Score> scoreList;
     private RecyclerView recyclerViewScore;
     DbHelper dbHelper = new DbHelper(ScoreView.this);
+    ScoreFireBase scoreFireBase = new ScoreFireBase(ScoreView.this);
+    private DatabaseReference databaseReference;
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -36,9 +43,11 @@ public class ScoreView extends AppCompatActivity {
         recyclerViewScore.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewScore.setHasFixedSize(true);
 
-        ScoreListAdapter adapter = new ScoreListAdapter(ScoreView.this, dbHelper.getScoreFromBBDD());
-        recyclerViewScore.setAdapter(adapter);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        scoreList = new ArrayList<>();
+
+        scoreFireBase.getDataFromFirebase();
 
 
     }

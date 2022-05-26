@@ -15,10 +15,13 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     private Context context;
 
 
-    public ScoreListAdapter(Context context, ArrayList<Score> scoreArrayList) {
-        this.scoreArrayList = scoreArrayList;
+
+    public ScoreListAdapter(Context context, ArrayList<Score> arrayListScore) {
+        this.scoreArrayList = arrayListScore;
         this.context = context;
     }
+
+
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,11 +49,9 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
 
-        Score score = scoreArrayList.get(position);
-
-        holder.puzzleLevel.setText("Level " + score.getPuzzleLevel());
-        holder.scoreTime.setText(String.valueOf("Time Solved " + score.getScoreTime()));
-        holder.textTime.setText(String.valueOf(score.getDate()));
+        holder.puzzleLevel.setText(scoreArrayList.get(position).getPuzzleLevel());
+        holder.scoreTime.setText((int) scoreArrayList.get(position).getScoreTime());
+        holder.textTime.setText((CharSequence) scoreArrayList.get(position).getDate());
     }
 
 

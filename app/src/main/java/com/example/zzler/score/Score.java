@@ -1,16 +1,13 @@
 package com.example.zzler.score;
 
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.Serializable;
 import java.util.Date;
 
 public class Score implements Serializable {
 
     private String puzzleLevel;
-    private Float scoreTime;
+    private float scoreTime;
     private Date date;
 
     public Score (){}
@@ -26,6 +23,8 @@ public class Score implements Serializable {
         return date;
     }
 
+    public void setDate (Date date) { this.date = date; }
+
     public String getPuzzleLevel() {
         return puzzleLevel;
     }
@@ -34,13 +33,13 @@ public class Score implements Serializable {
         this.puzzleLevel = puzzleName;
     }
 
-    public Float getScoreTime() {
-        return scoreTime;
+    public float getScoreTime() { return this.scoreTime;
     }
 
     public void setScoreTime(Float scoreTime) {
         this.scoreTime = scoreTime;
     }
+
 
     //prod 3
 
