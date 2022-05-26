@@ -59,5 +59,12 @@
         android:layout_marginLeft="260dp"
         android:layout_marginTop="200dp"
         />
+    <ImageView
+        android:id="@+id/img7"
+        android:layout_width="110dp"
+        android:layout_height="190dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="400dp"
+        />
 
 </RelativeLayout>

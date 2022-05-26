@@ -73,6 +73,8 @@ public class PuzzleListView extends AppCompatActivity {
     private ImageView img3;
     private ImageView img4;
     private ImageView img5;
+    private ImageView img6;
+    private ImageView img7;
 
 
     StorageReference imagesRef = FirebaseStorage.getInstance().getReference();
@@ -92,17 +94,14 @@ public class PuzzleListView extends AppCompatActivity {
     // Create a reference to a file from a Google Cloud Storage URI
 
     StorageReference gsReference0 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/doctor_strange.jpg");
-
     StorageReference gsReference1 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/gandalf.jpg");
-
     StorageReference gsReference2 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/gandalf_vs_demond.jpg");
     StorageReference gsReference3 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/groot.jpg");
     StorageReference gsReference4 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/hobbit_house.jpg");
-    /*
-    StorageReference gsReference5 = storage.getReferenceFromUrl("gs://bucket/images/hulk.jpg");
-    StorageReference gsReference6 = storage.getReferenceFromUrl("gs://bucket/images/star_lord.jpg");
+    StorageReference gsReference5 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/hulk.jpg");
+    StorageReference gsReference6 = storage.getReferenceFromUrl("gs://p8-prod3-7852e.appspot.com/images/star_lord.jpg");
 
-     */
+
 
 
     // Create a reference from an HTTPS URL
@@ -136,6 +135,8 @@ public class PuzzleListView extends AppCompatActivity {
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
         img5 = findViewById(R.id.img5);
+        img6 = findViewById(R.id.img6);
+        img7 = findViewById(R.id.img7);
 
         mDatabaseRef = FirebaseStorage.getInstance().getReference();
 
@@ -153,6 +154,12 @@ public class PuzzleListView extends AppCompatActivity {
 
         Glide.with(this).load(gsReference4)
                 .into(img5);
+
+        Glide.with(this).load(gsReference5)
+                .into(img6);
+
+        Glide.with(this).load(gsReference6)
+                .into(img7);
 
 
         //getDataFromFirebase();
