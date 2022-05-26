@@ -44,11 +44,7 @@ public class ScoreFireBase {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Score score = new Score();
-
-                    score.setDate((Date) dataSnapshot.child("date").getValue());
-                    score.setPuzzleName((String) dataSnapshot.child("puzzleLevel").getValue());
-                    score.setScoreTime((Float) dataSnapshot.child("scoreTime").getValue());
-
+                    score = dataSnapshot.getValue(Score.class);
 
 
                     arrayListScore.add(score);
