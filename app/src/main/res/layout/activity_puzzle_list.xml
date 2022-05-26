@@ -20,7 +20,9 @@
         android:layout_width="110dp"
         android:layout_height="190dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="70dp" />
+        android:layout_marginTop="70dp"
+        android:onClick="clickimg1"
+        tools:ignore="OnClick" />
 
     <ImageView
         android:id="@+id/img2"
@@ -28,6 +30,8 @@
         android:layout_height="190dp"
         android:layout_marginLeft="145dp"
         android:layout_marginTop="70dp"
+        android:onClick="clickimg2"
+        tools:ignore="OnClick"
         />
 
     <ImageView
@@ -35,7 +39,9 @@
         android:layout_width="110dp"
         android:layout_height="190dp"
         android:layout_marginLeft="260dp"
-        android:layout_marginTop="70dp" />
+        android:layout_marginTop="70dp"
+        android:onClick="clickimg3"
+        tools:ignore="OnClick"/>
 
     <ImageView
         android:id="@+id/img4"
@@ -43,6 +49,8 @@
         android:layout_height="190dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="200dp"
+        android:onClick="clickimg4"
+        tools:ignore="OnClick"
         />
 
     <ImageView
@@ -50,7 +58,10 @@
         android:layout_width="110dp"
         android:layout_height="190dp"
         android:layout_marginLeft="145dp"
-        android:layout_marginTop="200dp" />
+        android:layout_marginTop="200dp"
+        android:onClick="clickimg5"
+        tools:ignore="OnClick"
+        />
 
     <ImageView
         android:id="@+id/img6"
@@ -58,6 +69,8 @@
         android:layout_height="190dp"
         android:layout_marginLeft="260dp"
         android:layout_marginTop="200dp"
+        android:onClick="clickimg6"
+        tools:ignore="OnClick"
         />
     <ImageView
         android:id="@+id/img7"
@@ -65,6 +78,8 @@
         android:layout_height="190dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="400dp"
+        android:onClick="clickimg7"
+        tools:ignore="OnClick"
         />
 
 </RelativeLayout>

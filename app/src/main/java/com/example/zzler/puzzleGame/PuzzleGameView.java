@@ -55,6 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,10 +71,17 @@ import com.example.zzler.R;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.score.Score;
 import com.example.zzler.webView.Info;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +100,7 @@ import java.util.TimeZone;
 public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView {
 
     private static final int PERMISSION_WRITE_CALENDAR = 0;
-private static final int PERMISSION_READ_CALENDAR = 0;
+    private static final int PERMISSION_READ_CALENDAR = 0;
     private Float timeGameSolved;
     private PuzzleGamePresenterImpl gamePresenter;
     protected static Integer dificulty;
@@ -106,6 +114,7 @@ private static final int PERMISSION_READ_CALENDAR = 0;
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
     Context context;
+    public Context staticcontext = this;
     Integer urlImg;
     ImageView imageView;
     Runnable runnable;
@@ -125,6 +134,15 @@ private static final int PERMISSION_READ_CALENDAR = 0;
     private PendingIntent pendingIntent;
     private final static String CHANNEL_ID = "principal";
     private final static int NOTIFICATION_ID = 0;
+
+
+    //STORAGE
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
+
+    ArrayList<StorageReference> remoteFireImg;
 
     private void createNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
@@ -304,6 +322,54 @@ private static final int PERMISSION_READ_CALENDAR = 0;
         mapImgToSplit = mapImg.mapImgToSplit;
 
 
+        Log.i("FILEEE","Antes de todo");
+
+
+        ArrayList<String> namesJpg = new ArrayList<>();
+        namesJpg.add("doctor_strange.jpg");
+        namesJpg.add("gandalf.jpg");
+        namesJpg.add("gandalf_vs_demond.jpg");
+        namesJpg.add("groot.jpg");
+        namesJpg.add("hobbit_house.jpg");
+        namesJpg.add("hulk.jpg");
+        namesJpg.add("star_lord.jpg");
+
+
+        remoteFireImg = new ArrayList<>();
+
+        int i = 0;
+        for (StorageReference ref: remoteFireImg
+             ) {
+            remoteFireImg.add(storageRef.child("images/"+namesJpg.get(i)));
+            i++;
+        }
+
+
+        ArrayList<File> files = new ArrayList<>();
+        File outputFile = null;
+        int b = 1;
+        //File outputDir = this.getCacheDir(); // context being the Activity pointer
+        try {
+            files.add(File.createTempFile("images"+b, "jpg"));
+            File fireImg1 = new File(context.getCacheDir(), "images"+b);
+            Log.i("FILEEEE_toString", fireImg1.toString());
+            b++;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //File localFile = new File(this.getFilesDir(), "img1");
+        //File fireImg1 = new File(context.getCacheDir(), "img1");
+        //Log.i("FILEEEE", fireImg1.toString());
+        for (File file: files
+             ) {
+            downloadFiles(remoteFireImg, file);
+
+        }
+
+
+        //File fireImg1 = new File(context.getCacheDir(), "images");
+        //Log.i("FILEEEE_File", fireImg1.toString());
 
 
 
@@ -392,7 +458,31 @@ private static final int PERMISSION_READ_CALENDAR = 0;
 
     }
 
- @Override
+    private void downloadFiles(ArrayList<StorageReference> remoteFireImg, File outputFile) {
+        for (StorageReference ref: remoteFireImg
+             ) {
+            ref.getFile(outputFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+
+                    Log.i("FILEEE","exito");
+                    //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                    Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+                }
+            });
+        }
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -524,25 +614,29 @@ MapImg mapImg;
 
         //mapImgToSplit.put(img,false);
 
-        if (getIntent().getParcelableExtra("photo")!=null){
-            bitmap = getIntent().getParcelableExtra("photo");
-            Drawable d = new BitmapDrawable(getResources(), bitmap);
+
+            File fireImg1 = new File(context.getCacheDir(), "/images1");
+            String pathName = fireImg1.toString();
+            Drawable d = Drawable.createFromPath(pathName);
+            bitmap = BitmapFactory.decodeFile(pathName);
+            //Drawable d = new BitmapDrawable(getResources(), bitmap);
             imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.setImageDrawable(d);
-            //imageView.setImageBitmap(bitmap);
-        }else if(getIntent().getParcelableExtra("photoGallery")!=null){
-            //Log.i("******************************************************dentro",getIntent().getParcelableExtra("photoGallery"));
-            Uri uri = getIntent().getParcelableExtra("photoGallery");
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-            Drawable d = new BitmapDrawable(getResources(), bitmap);
-            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            imageView.setImageDrawable(d);
-        }else{
-            bitmap = BitmapFactory.decodeResource(getResources(), img);
-            imageView.setImageDrawable(getResources().getDrawable(img));
-        }
+
+
+
+
+
+/*
+        Uri uri = getIntent().getParcelableExtra("photoGallery");
+        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+        Drawable d = new BitmapDrawable(getResources(), bitmap);
+        imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageView.setImageDrawable(d);
+
+ */
 
 
         int[] dimensions = getBitmapPositionInsideImageView(imageView);
