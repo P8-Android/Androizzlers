@@ -1,10 +1,12 @@
 package com.example.zzler.puzzleList;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +14,23 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.zzler.R;
 import com.example.zzler.puzzleGame.PuzzleGameView;
+import com.example.zzler.score.ScoreListAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,10 +38,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PuzzleListView extends AppCompatActivity {
@@ -38,10 +53,19 @@ public class PuzzleListView extends AppCompatActivity {
     ImageView imgV;
     FloatingActionButton cameraButton;
     FloatingActionButton galleryButton;
-    ArrayList<String> imagesPuzzles = new ArrayList<String>();
+    ArrayList<String> imagesPuzzles;
     private ImageAdapter imageAdapter;
-    DatabaseReference databaseReference;
+    StorageReference storageReference;
 
+    private RecyclerView mRecyclerView;
+    private ImageAdapter mAdapter;
+
+    private ProgressBar progressBar;
+
+    private DatabaseReference mDatabaseRef;
+    private List<ItemImage> itemImages;
+
+   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +78,42 @@ public class PuzzleListView extends AppCompatActivity {
 
         Intent i = new Intent(this, PuzzleGameView.class);
         imgV = null;
-        gridView = findViewById(R.id.grid_image_puzzle);
+
+        mRecyclerView=findViewById(R.id.recycler_list_puzzle);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(PuzzleListView.this));
+
+        itemImages =new ArrayList<>();
+        mDatabaseRef= FirebaseDatabase.getInstance().getReference("images");
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren())
+                {
+                    ItemImage itemimg = postSnapshot.getValue(ItemImage.class);
+                    itemImages.add(itemimg);
+                }
+                mAdapter = new ImageAdapter(PuzzleListView.this, itemImages);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        getAllImages();
 
-        ImageAdapter gridAdapter = (new ImageAdapter(this, imagesPuzzles));
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
 
-        gridView.setAdapter(gridAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+
+
+
+      /*  gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 //View imgView = gridAdapter.getItem();
                 Bundle bundle = new Bundle();
@@ -74,7 +122,7 @@ public class PuzzleListView extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        });
+        });*/
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,68 +172,62 @@ public class PuzzleListView extends AppCompatActivity {
         }
     }
 
-    public class ImageAdapter extends BaseAdapter {
+    public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-        ArrayList<String> imagesPuzzleArrayList;
         private Context context;
+        private List<ItemImage> imagesItems;
 
-        public ImageAdapter(Context c, ArrayList<String> imagesPuzzleArrayList) {
+        public ImageAdapter(Context context, List<ItemImage> imagesItems) {
+            this.context = context;
+            this.imagesItems = imagesItems;
 
-            this.context = c;
-            this.imagesPuzzleArrayList = imagesPuzzleArrayList;
-        }
-
-        public int getCount() {
-            return this.imagesPuzzleArrayList.size();
         }
 
 
-        public Object getItem(int position) {
-            return null;
+        public class ImageViewHolder extends RecyclerView.ViewHolder {
+
+            ImageView imageView;
+
+            public ImageViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                imageView = findViewById(R.id.image_grid);
+            }
         }
 
-        public long getItemId(int position) {
-            return 0;
+
+        @NonNull
+        @Override
+        public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+            View v=LayoutInflater.from(context).inflate(R.layout.activity_puzzle_list, parent,false);
+            return  new ImageViewHolder(v);
         }
 
+        @Override
+        public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+            ItemImage item = imagesItems.get(position);
+            Picasso.with(context).
+                    load(item.getImgUrl()).
+                    into(holder.imageView);
 
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater layoutInflater = getLayoutInflater();
-            View view = layoutInflater.inflate(R.layout.activity_puzzle_list, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_grid);
-            Picasso.with(getApplicationContext()).load(imagesPuzzleArrayList.get(position)).into(imageView);
-            return view;
         }
 
+        @Override
+        public int getItemCount() {
+            return imagesItems.size();
+        }
 
 
     }
 
 
 
-
-
-
-    public void getAllImages() {
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    imagesPuzzles.add(ds.child("images").getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
 
 }
+
+
+
+
 
 

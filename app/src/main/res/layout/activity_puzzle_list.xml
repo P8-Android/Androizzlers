@@ -17,8 +17,8 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-    <GridView
-        android:id="@+id/grid_image_puzzle"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_list_puzzle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="10dp"
@@ -32,7 +32,7 @@
         tools:layout_editor_absoluteY="-16dp">
 
 
-    </GridView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cameraButton"
