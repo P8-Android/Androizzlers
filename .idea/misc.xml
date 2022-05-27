@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lino/Desktop/UOC_22H1/(P8) puzzledroid/Prod3(P8)/ghub/app/src/main/res/layout/activity_cloud.xml" value="0.1585144927536232" />
+        <entry key="..\:/Users/Lino/Desktop/UOC_22H1/(P8) puzzledroid/Prod3(P8)/ghub/app/src/main/res/layout/activity_info.xml" value="0.17119565217391305" />
+        <entry key="..\:/Users/Lino/Desktop/UOC_22H1/(P8) puzzledroid/Prod3(P8)/ghub/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/Lino/Desktop/UOC_22H1/(P8) puzzledroid/Prod3(P8)/ghub/app/src/main/res/layout/activity_puzzle_game.xml" value="0.17119565217391305" />
+        <entry key="..\:/Users/Lino/Desktop/UOC_22H1/(P8) puzzledroid/Prod3(P8)/ghub/app/src/main/res/layout/activity_puzzle_list.xml" value="0.17119565217391305" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2605" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/button_style.xml" value="0.277" />
         <entry key="..\:/Users/chuse/StudioProjects/Androizzlers/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2605" />
@@ -22,9 +27,15 @@
         <entry key="app/src/main/res/drawable/layoutsplash.xml" value="0.1615" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.198" />
         <entry key="app/src/main/res/layout/act_splash.xml" value="0.19010416666666666" />
+
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_puzzle_game.xml" value="0.5" />
+
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_puzzle_game.xml" value="0.19010416666666666" />
+
         <entry key="app/src/main/res/layout/activity_puzzle_list.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/layout/item_puzzle_list.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/item_puzzle_score.xml" value="0.5" />
         <entry key="app/src/main/res/layout/puzzle_list.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/menu/menu_toolbar.xml" value="0.19010416666666666" />

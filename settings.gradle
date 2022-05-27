@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter() //Firebase SDK
     }
 }
 rootProject.name = "Zzler"

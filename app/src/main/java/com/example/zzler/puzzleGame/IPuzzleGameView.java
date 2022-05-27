@@ -2,10 +2,12 @@ package com.example.zzler.puzzleGame;
 
 import android.widget.ImageView;
 
+import java.util.Date;
+
 public interface IPuzzleGameView {
 
     void showNextPuzzle(ImageView img);
-    float saveScore(String puzzleName, float timeToSolved);
-    void saveScoreInCalendar (String puzzleName, float timeToSolved);
+    void saveScore(String puzzleName, float timeToSolved, Date date);
+
 
 }

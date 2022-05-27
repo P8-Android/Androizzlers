@@ -4,7 +4,19 @@
     <string name="btnScore" translatable="false">Score</string>
     <string name="btnGame" translatable="false">Game</string>
     <string name="txtFinish" translatable="false">Finish!</string>
-    <string name="btnInfoBack" translatable="false">Volver</string>
+    <string name="txtMusic" translatable="false">Music</string>
+    <string name="txtSelMusic" translatable="false">Select Music</string>
+    <string name="btnInfoBack" translatable="false">Return</string>
+
+    <string name="secs" translatable="false">" seconds"</string>
+    <string name="finalTime" translatable="false">Final time: </string>
+
+    <string name="puzzleList" translatable="false">Puzzle List</string>
+
     <string name="info" translatable="false">Info</string>
-    <string name="newPuzzle">Puzzle Nuevo</string>
+    <string name="signIn" translatable="false">Sign the f In</string>
+    <string name="signOut" translatable="false">Sign Out</string>
+    <string name="newPuzzle" translatable="false">Nuevo Puzzle</string>
 </resources>
+
+

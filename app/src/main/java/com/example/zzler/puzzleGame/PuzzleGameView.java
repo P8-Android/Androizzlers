@@ -59,10 +59,12 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,11 +79,19 @@ import com.example.zzler.main.MainActivity;
 import com.example.zzler.R;
 import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.score.ScoreView;
+import com.example.zzler.score.Score;
 import com.example.zzler.webView.Info;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,6 +99,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.HashMap;
 import java.util.Timer;
@@ -113,6 +124,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     static ArrayList<Timer> afterClickTimerCollection;
     boolean activateDB;
     Context context;
+    public Context staticcontext = this;
     Integer urlImg;
     ImageView imageView;
     Runnable runnable;
@@ -135,6 +147,14 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     private PendingIntent pendingIntent;
     private final static String CHANNEL_ID = "principal";
     private final static int NOTIFICATION_ID = 0;
+
+
+    //STORAGE
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
+
 
     private void createNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
@@ -189,20 +209,19 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
         //builder.show(); // No permite jugar con la música nueva
 
-        if(flagMusic){ // Si es true se ha cambiado la musica. Mientras no la haya cambiado no muestres el dialog
-            Log.i("Musica", "se ha cambiado la musica");
+
             afterClickTimerCollection.get(countToTimer).cancel();
             TouchListener.countToShowFinishMsg=0;
             builder.show();
 
-        }
 
-    }
+}
 
     @Override
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
+
 
     }
 
@@ -236,115 +255,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         startActivity(i);
     }
 
-    @Override
-    public void saveScoreInCalendar(String puzzleName, float timeToSolved) {
-        Log.i("SAVESCOREINCALENDAR", "Starts to save score in mobile calendar");
-
-        int timeTo = (int) timeToSolved;
-        String score = " Score: " + (long) timeToSolved + " seg";
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-
-        Calendar beg = Calendar.getInstance();
-        beg.add(Calendar.SECOND, -timeTo);
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-        beg.set(beg.get(Calendar.YEAR), beg.get(Calendar.MONTH), beg.get(Calendar.DAY_OF_MONTH), beg.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-
-        ContentResolver cr = context.getContentResolver();
-        ContentValues cv = new ContentValues();
-            cv.put("calendar_id", 1);
-            cv.put("title", puzzleName + " " + score);
-            cv.put("description", score);
-            TimeZone tz = cal.getTimeZone();
-            cv.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
-            cv.put("dtstart", beg.getTimeInMillis());
-            cv.put("dtend", cal.getTimeInMillis());
-
-        try {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, PERMISSION_WRITE_CALENDAR);
-
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);
-                long eventID = Long.parseLong(uri.getLastPathSegment());
-                Toast.makeText(this, "Se ha insetado la puntuación en el calendario", Toast.LENGTH_LONG).show();
-                Log.i("SAVESCOREINCALENDAR", "Permission was granted");
-            }else{
-                Toast.makeText(this, "No se han aceptado los permisos para guardar la puntuación en el calendario", Toast.LENGTH_LONG).show();
-                Log.i("SAVESCOREINCALENDAR", "Permission was not granted");
-            }
-        } catch (Throwable t) {
-            Log.i("SAVESCOREINCALENDAR", "Error saving in Calendar");
-            Log.i("SAVESCOREINCALENDAR", String.valueOf(t));
-            Toast.makeText(this, "No se ha podido grabar la puntuación en el calendario", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public boolean isNewRecord(int level, int score){
-        int bestScoreStore = getScoreCalendar(level);
-        Log.i("isNewRecord", "BEST SCORE OBTAINED " + bestScoreStore);
-        return bestScoreStore < score?false: true;
-    }
-
-    public JSONObject getBestScoreLevels(int maxLevel){
-        JSONObject bestScoreLevels = new JSONObject();
-
-        try {
-            for(int i=1; i<=maxLevel; i++){
-                String level = "Level " + i;
-                bestScoreLevels.put(level, getScoreCalendar(i));
-            }
-        Log.i("BestScoreLevel","" + bestScoreLevels.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return bestScoreLevels;
-    }
-
-    public int getScoreCalendar(int levelToEvaluate){
-        ArrayList <Integer> scoreLevelList = new ArrayList<Integer>();
-
-        final String[] EVENT_PROJECTION = new String[]{
-                CalendarContract.Events._ID,
-                CalendarContract.Events.TITLE,
-                CalendarContract.Events.DTSTART,
-                CalendarContract.Events.DTEND,
-        };
-
-        final int PROJECTION_ID_INDEX = 0;
-        final int PROJECTION_TITLE_INDEX = 1;
-        final int PROJECTION_DTSTART_INDEX = 2;
-        final int PROJECTION_DTEND_INDEX = 3;
-
-        String where = "( (title LIKE \'Level%\') AND (calendar_id = " + 1 + "))";
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-
-            ContentResolver cr = getContentResolver();
-            Cursor cursor = cr.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, where,null, null, null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    String fullInfo = cursor.getString(PROJECTION_TITLE_INDEX);
-                    //Log.i("TAG","fullInfo" + fullInfo);
-                    String score = fullInfo.split(" ")[4];
-                    Log.i("score", score);
-                    String level = fullInfo.split(" ")[1].split("#")[1];
-                    Log.i("level", level);
-                    if (Integer.parseInt(level) == levelToEvaluate){
-                        Log.i("GetMaxScore", level);
-                        scoreLevelList.add(Integer.parseInt(score));
-                    }
-                }
-                Collections.sort(scoreLevelList);
-                Log.i("TAG", "Para el nivel: "+levelToEvaluate+" el record es: " + scoreLevelList.get(0) + " segundos");
-                cursor.close();
-            }
-
-        }
-        Log.i("scoreLevelList", scoreLevelList.toString());
-        return scoreLevelList.get(0);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -365,6 +275,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         btnSelectSong = findViewById(R.id.selectSong);
         aSwitch = findViewById(R.id.turnMusic);
         final RelativeLayout layout = findViewById(R.id.layout);
+
 	    puzzleImageView = findViewById(R.id.imageView);
         starImageFinish = findViewById(R.id.scoreStars);
         finishFlags = findViewById(R.id.finish_flags);
@@ -540,30 +451,28 @@ protected void startTimer() {
                 public void run() {
                     if(!paused){
                         time++;
-                        txtTimeGame.setText(time.toString() + " Segundos");
+                        txtTimeGame.setText(time.toString() + context.getResources().getString(R.string.secs)); //pasamos el texto desde strings.xml para internacionalización
                         Log.i("interval",time.toString());
                     }else{
                         if(activateDB){
-                            long id = (long) saveScore("Level #"+count, time);
+                            saveScore("Level #"+count, time, new Date(System.currentTimeMillis()));
+                            Toast.makeText(PuzzleGameView.this, "Values inserted in RealTime Databased!", Toast.LENGTH_LONG).show();
+                            /*
                             saveScoreInCalendar ("Level #"+count, time);
                             if(id > 0){
                                 Toast.makeText(PuzzleGameView.this, "Values inserted in Local BD!", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(PuzzleGameView.this, "Error when inserting values in local BD", Toast.LENGTH_LONG).show();
                             }
+
+                             */
                         }
                         stop();
                     }
                 }
 
                 private void stop() {
-                    try{
-                        if (isNewRecord(count,time)){
-                            createNotification();
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+
                     TouchListener.setCountToShowFinishMsg(0);
                     time = 0;
                     afterClickTimerCollection.get(countToTimer).cancel();
@@ -603,6 +512,7 @@ protected void startTimer() {
         //Integer finishTime = Integer.parseInt(timeString); se rompe  con parseInt
 
         txtTimeGame.setText("Tiempo final: "+timeString);
+        //txtTimeGame.setText(this.getResources().getString(R.string.finalTime) + timeString); //pasamos el texto desde strings.xml para internacionalización
         return timeString;
 
     }
@@ -613,6 +523,7 @@ protected void startTimer() {
     }
 
 MapImg mapImg;
+File fileImg;
 
     @SuppressLint("NewApi")
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) throws IOException {
@@ -621,42 +532,78 @@ MapImg mapImg;
         int piecesNumber = rows*cols;
         Bitmap bitmap;
 
-        puzzleImageView = findViewById(R.id.imageView);
         ArrayList<PuzzlePiece> pieces = new ArrayList<>(piecesNumber);
 
         // Get the scaled bitmap of the source image
        // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
-        int img = 0;
-        do{
-            img = getImgToSplit(posImg);
-
-            Log.i("Boooolean",mapImgToSplit.get(img).toString());
-        }while(mapImgToSplit.get(img)==false);
-        mapImgToSplit.replace(img,false);
+        
 
         //mapImgToSplit.put(img,false);
 
-        if (getIntent().getParcelableExtra("photo")!=null){
-            pieces.removeAll(pieces);
-            bitmap = getIntent().getParcelableExtra("photo");
-            Drawable d = new BitmapDrawable(getResources(), bitmap);
-            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            puzzleImageView.setImageDrawable(d);
-            //imageView.setImageBitmap(bitmap);
-        }else if(getIntent().getParcelableExtra("photoGallery")!=null){
-            pieces.removeAll(pieces);
-            Uri uri = getIntent().getParcelableExtra("photoGallery");
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-            Drawable d = new BitmapDrawable(getResources(), bitmap);
-            puzzleImageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            puzzleImageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            puzzleImageView.setImageDrawable(d);
-        }else{
-            bitmap = BitmapFactory.decodeResource(getResources(), img);
-            puzzleImageView.setImageDrawable(getResources().getDrawable(img));
+
+
+        switch (posImg){
+            case 1:
+                fileImg = PuzzleListView.fireImg1;
+                break;
+            case 2:
+                fileImg = PuzzleListView.fireImg2;
+                break;
+            case 3:
+                fileImg = PuzzleListView.fireImg3;
+                break;
+            case 4:
+                fileImg = PuzzleListView.fireImg4;
+                break;
+            case 5:
+                fileImg = PuzzleListView.fireImg5;
+                break;
+            case 6:
+                fileImg = PuzzleListView.fireImg6;
+                break;
+            case 7:
+                fileImg = PuzzleListView.fireImg7;
+                break;
+
         }
+
+            // si es 1 fireImg1 -- Switch
+            //File fileImg = PuzzleListView.fireImg1;
+            String pathName = fileImg.getAbsolutePath();
+            Log.i("PATHNAME", pathName);
+            Drawable d = Drawable.createFromPath(pathName.replace("jpg",".jpg"));
+
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) d;
+            Log.i("DRAWABLE", String.valueOf(""+d!=null));
+
+            //bitmap = bitmapDrawable.getBitmap();
+            Log.i("PATHNAME", fileImg.getAbsolutePath());
+            bitmap = BitmapFactory.decodeFile(fileImg.getAbsolutePath().replace("jpg",".jpg"));
+
+            //bitmap = ((BitmapDrawable) d).getBitmap();
+            Log.i("BITTMAP", String.valueOf(""+bitmap!=null));
+            //Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setImageDrawable(d);
+
+
+
+
+
+
+
+/*
+        Uri uri = getIntent().getParcelableExtra("photoGallery");
+        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+        Drawable d = new BitmapDrawable(getResources(), bitmap);
+        imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        imageView.setImageDrawable(d);
+
+ */
+
 
 
         int[] dimensions = getBitmapPositionInsideImageView(puzzleImageView);
@@ -890,10 +837,11 @@ MapImg mapImg;
     }
 
     @Override
-    public float saveScore(String puzzleName, float timeToSolved) {
-        long id = gamePresenter.saveScore(puzzleName, timeToSolved, context);
+    public void saveScore(String puzzleName, float timeToSolved, Date date) {
+        gamePresenter.saveScore(new Score(puzzleName,timeToSolved,date));
+        //long id = gamePresenter.saveScore(puzzleName, timeToSolved, context);
         this.activateDB = false;
-        return id;
+        //return id;
     }
 
     public void splitPuzzleImage (ImageView img){
