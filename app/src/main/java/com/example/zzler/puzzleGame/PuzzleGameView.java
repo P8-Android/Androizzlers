@@ -68,6 +68,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.zzler.main.MainActivity;
 import com.example.zzler.R;
+import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.score.ScoreView;
 import com.example.zzler.score.Score;
 import com.example.zzler.webView.Info;
@@ -142,8 +143,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
     // Create a storage reference from our app
     StorageReference storageRef = storage.getReference();
 
-    ArrayList<StorageReference> remoteFireImg;
-    ArrayList<File> files;
+
     private void createNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
         builder.setContentTitle("New or equal RECORD!!");
@@ -325,47 +325,10 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         Log.i("FILEEE","Antes de todo");
 
 
-        ArrayList<String> namesJpg = new ArrayList<>();
-        namesJpg.add("doctor_strange.jpg");
-        namesJpg.add("gandalf.jpg");
-        namesJpg.add("gandalf_vs_demond.jpg");
-        namesJpg.add("groot.jpg");
-        namesJpg.add("hobbit_house.jpg");
-        namesJpg.add("hulk.jpg");
-        namesJpg.add("star_lord.jpg");
 
 
-        remoteFireImg = new ArrayList<>();
-
-        int i = 0;
-        for (StorageReference ref: remoteFireImg
-             ) {
-            remoteFireImg.add(storageRef.child("images/"+namesJpg.get(i)));
-            i++;
-        }
 
 
-        files = new ArrayList<>();
-        File outputFile = null;
-        int b = 1;
-        //File outputDir = this.getCacheDir(); // context being the Activity pointer
-        try {
-            files.add(File.createTempFile("images"+b, "jpg"));
-            files.add(new File(context.getCacheDir(), "images"+b));
-            Log.i("FILEEEE_toString", files.get(1).getPath());
-            b++;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //File localFile = new File(this.getFilesDir(), "img1");
-        //File fireImg1 = new File(context.getCacheDir(), "img1");
-        //Log.i("FILEEEE", fireImg1.toString());
-        for (File file: files
-             ) {
-            downloadFiles(remoteFireImg, file);
-
-        }
 
 
         //File fireImg1 = new File(context.getCacheDir(), "images");
@@ -458,29 +421,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
 
     }
 
-    private void downloadFiles(ArrayList<StorageReference> remoteFireImg, File outputFile) {
-        for (StorageReference ref: remoteFireImg
-             ) {
-            ref.getFile(outputFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Local temp file has been created
 
-                    Log.i("FILEEE","exito");
-                    //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
-
-                    Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                    Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
-                }
-            });
-        }
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -615,21 +556,26 @@ MapImg mapImg;
         //mapImgToSplit.put(img,false);
 
 
-            File fireImg1 = new File(context.getCacheDir(), files.get(1).toString());
+            File fireImg1 = PuzzleListView.getOneFile(0);
             String pathName = fireImg1.getPath();
             Log.i("PATHNAME", pathName);
-            Drawable d = Drawable.createFromPath(pathName);
+            Drawable d = Drawable.createFromPath(pathName.replace("jpg",".jpg"));
 
             BitmapDrawable bitmapDrawable = (BitmapDrawable) d;
             Log.i("DRAWABLE", String.valueOf(""+d!=null));
-            bitmap = bitmapDrawable.getBitmap();
+
+            //bitmap = bitmapDrawable.getBitmap();
+
+            bitmap = BitmapFactory.decodeFile(fireImg1.getPath());
 
             //bitmap = ((BitmapDrawable) d).getBitmap();
             Log.i("BITTMAP", String.valueOf(""+bitmap!=null));
-        //Drawable d = new BitmapDrawable(getResources(), bitmap);
+            //Drawable d = new BitmapDrawable(getResources(), bitmap);
             imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.setImageDrawable(d);
+
+
 
 
 

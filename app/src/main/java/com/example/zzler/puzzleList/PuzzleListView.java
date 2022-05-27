@@ -123,7 +123,8 @@ public class PuzzleListView extends AppCompatActivity {
     // Note that in the URL, characters are URL escaped!
     //StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg");
 
-
+    ArrayList<StorageReference> remoteFireImg;
+    static  ArrayList<File> files;
 
 
 
@@ -251,9 +252,78 @@ public class PuzzleListView extends AppCompatActivity {
         });*/
 
 
+        ArrayList<String> namesJpg = new ArrayList<>();
+        namesJpg.add("doctor_strange.jpg");
+        namesJpg.add("gandalf.jpg");
+        namesJpg.add("gandalf_vs_demond.jpg");
+        namesJpg.add("groot.jpg");
+        namesJpg.add("hobbit_house.jpg");
+        namesJpg.add("hulk.jpg");
+        namesJpg.add("star_lord.jpg");
 
 
+        remoteFireImg = new ArrayList<>();
 
+        int j = 0;
+        for (StorageReference ref: remoteFireImg
+        ) {
+            remoteFireImg.add(storageRef.child("images/"+namesJpg.get(j)));
+            j++;
+        }
+
+        files = new ArrayList<>();
+        File outputFile = null;
+        int b = 1;
+        //File outputDir = this.getCacheDir(); // context being the Activity pointer
+        try {
+            files.add(File.createTempFile("images"+b, "jpg", getFilesDir()));
+            files.add(new File(getFilesDir(), "images"+b));
+            Log.i("FILEEEE_toString", files.get(1).getPath());
+            b++;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //File localFile = new File(this.getFilesDir(), "img1");
+        //File fireImg1 = new File(context.getCacheDir(), "img1");
+        //Log.i("FILEEEE", fireImg1.toString());
+        for (File file: files
+        ) {
+            downloadFiles(remoteFireImg, file);
+
+        }
+
+//        File file = new File(context.getCacheDir(), "img1");
+        Log.i("FILEEEE", files.get(1).toString());
+
+
+    }
+
+    public static File getOneFile(int i){
+        return files.get(i);
+    }
+
+    private void downloadFiles(ArrayList<StorageReference> remoteFireImg, File outputFile) {
+        for (StorageReference ref: remoteFireImg
+        ) {
+            ref.getFile(outputFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+
+                    Log.i("FILEEE","exito");
+                    //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                    Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+                }
+            });
+        }
 
     }
 
