@@ -81,16 +81,16 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="323dp"
-            android:layout_gravity="center"
-            android:layout_margin="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            app:cardBackgroundColor="@color/primaryLightColor"
-            app:cardCornerRadius="8dp"
+            android:layout_margin="50dp"
             app:cardElevation="10dp"
+            app:cardCornerRadius="8dp"
             app:cardMaxElevation="10dp"
             app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true">
+            app:cardBackgroundColor="@color/primaryLightColor"
+            app:cardUseCompatPadding="true"
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/imgMain"
@@ -108,15 +108,17 @@
 
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:layout_gravity="bottom"
+                android:src="@drawable/puzzle_game_by_androizzlers_no_background"
                 android:layout_marginLeft="-8dp"
                 android:layout_marginBottom="-50dp"
-                android:src="@drawable/puzzle_game_by_androizzlers_no_background">
+                android:layout_gravity="bottom">
 
             </ImageView>
 
 
         </androidx.cardview.widget.CardView>
+
+        
 
         <Button
             android:id="@+id/bntGame"
@@ -124,11 +126,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/button_style"
+            android:textColor="@color/black"
+            android:textSize="20dp"
             android:fontFamily="@font/chewy"
             android:onClick="goGame"
-            android:text="@string/btnGame"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:text="@string/btnGame" />
 
         <Button
             android:id="@+id/bntScore"
@@ -137,11 +139,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_style"
+            android:textColor="@color/black"
+            android:textSize="20dp"
             android:fontFamily="@font/chewy"
             android:onClick="puzzleScore"
-            android:text="@string/btnScore"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:text="@string/btnScore" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
@@ -150,8 +152,7 @@
             android:layout_gravity="bottom|left"
             android:layout_marginTop="60dp"
             android:text="@string/signIn" />
-            <!--android:layout_marginBottom="60dp"-->
-
+        <!--android:layout_marginBottom="60dp"-->
 
 
     </LinearLayout>

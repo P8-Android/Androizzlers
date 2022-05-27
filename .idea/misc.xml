@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_puzzle_game.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/activity_puzzle_list.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/layout/item_puzzle_list.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/item_puzzle_score.xml" value="0.5" />
         <entry key="app/src/main/res/layout/puzzle_list.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/menu/menu_toolbar.xml" value="0.19010416666666666" />

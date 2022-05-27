@@ -22,14 +22,13 @@
         android:id="@+id/txtTimeGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="TextView"
         android:fontFamily="@font/chewy"
-        app:layout_constraintBottom_toTopOf="@+id/scoreStars"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
+        app:layout_constraintTop_toTopOf="@+id/toolbarGame" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnGoHome"
@@ -68,17 +67,19 @@
         app:layout_constraintStart_toEndOf="@+id/txtTimeGame"
         app:layout_constraintTop_toBottomOf="@+id/toolbarGame" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/scoreStars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
         app:layout_constraintEnd_toStartOf="@+id/btnUpLevel"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintStart_toEndOf="@+id/btnGoHome"
-        app:layout_constraintTop_toBottomOf="@+id/txtTimeGame"
-        app:srcCompat="@android:drawable/star_big_on"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGame"
+        app:layout_constraintVertical_bias="0.382"
+        tools:lottie_rawRes="@raw/animation_star"
+        >
+    </com.airbnb.lottie.LottieAnimationView>
 
 
     <RelativeLayout
@@ -103,9 +104,35 @@
             app:layout_constraintHeight="match_parent"
             app:layout_constraintWidth="match_parent"
             app:srcCompat="@drawable/splash" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/finish_puzzle_confetti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:lottie_rawRes="@raw/finish_puzzle_game">
+
+        </com.airbnb.lottie.LottieAnimationView>
     </RelativeLayout>
 
-    <TextView
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/finish_flags"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/selectSong"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toEndOf="@+id/turnMusic"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
+            app:layout_constraintVertical_bias="0.9"
+            app:lottie_rawRes="@raw/finish_flags">
+
+        </com.airbnb.lottie.LottieAnimationView>
+
+
+
+   <TextView
         android:id="@+id/txtFinish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,20 +140,26 @@
         android:text="@string/txtFinish"
 
         android:textSize="30dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout" />
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/finish_flags"
+        app:layout_constraintEnd_toStartOf="@+id/selectSong"
+        app:layout_constraintHorizontal_bias="0.469"
+        app:layout_constraintStart_toEndOf="@+id/turnMusic"
+        app:layout_constraintTop_toBottomOf="@+id/layout"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/turnMusic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="323dp"
-        android:text="@string/txtMusic"
+        android:text="Music"
+        android:textColor="@color/black"
+        android:fontFamily="@font/chewy"
+        android:textSize="20dp"
+        app:thumbTint="@color/primaryColor"
+        app:trackTint="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,11 +167,15 @@
 
     <Button
         android:id="@+id/selectSong"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="223dp"
         android:layout_marginEnd="40dp"
-        android:text="@string/txtSelMusic"
+        android:text="Select Music"
+        android:background="@drawable/button_style"
+        android:textColor="@color/black"
+        android:fontFamily="@font/chewy"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/turnMusic"

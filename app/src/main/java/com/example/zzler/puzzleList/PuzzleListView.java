@@ -62,28 +62,7 @@ public class PuzzleListView extends AppCompatActivity {
             }
         });
 
-        cameraButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                final int REQUEST_IMAGE_CAPTURE = 2;
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-
-            }
-        });
-
-        galleryButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-
-                startActivityForResult(intent, 9); //9 para diferenciar photo de camera de photo de galeria
-
-            }
-        });
+        
 
     }
 
