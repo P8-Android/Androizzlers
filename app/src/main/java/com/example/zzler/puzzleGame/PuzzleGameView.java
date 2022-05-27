@@ -352,7 +352,7 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         try {
             files.add(File.createTempFile("images"+b, "jpg"));
             files.add(new File(context.getCacheDir(), "images"+b));
-            Log.i("FILEEEE_toString", files.get(1).toString());
+            Log.i("FILEEEE_toString", files.get(1).getPath());
             b++;
         } catch (IOException e) {
             e.printStackTrace();
@@ -619,8 +619,10 @@ MapImg mapImg;
             String pathName = fireImg1.getPath();
             Log.i("PATHNAME", pathName);
             Drawable d = Drawable.createFromPath(pathName);
+
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) d;
             Log.i("DRAWABLE", String.valueOf(""+d!=null));
-            bitmap = BitmapFactory.decodeFile(pathName);
+            bitmap = bitmapDrawable.getBitmap();
 
             //bitmap = ((BitmapDrawable) d).getBitmap();
             Log.i("BITTMAP", String.valueOf(""+bitmap!=null));
