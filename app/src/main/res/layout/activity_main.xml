@@ -63,6 +63,16 @@
         android:layout_height="wrap_content"
         android:text="" />
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+        android:layout_width="99dp"
+        android:layout_height="110dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="#A38B62"
+        android:text="SingIn" />
+
     <Button
         android:id="@+id/signOutButton"
         android:layout_width="110dp"
@@ -145,13 +155,6 @@
             android:onClick="puzzleScore"
             android:text="@string/btnScore" />
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="99dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_marginTop="60dp"
-            android:text="@string/signIn" />
         <!--android:layout_marginBottom="60dp"-->
 
 

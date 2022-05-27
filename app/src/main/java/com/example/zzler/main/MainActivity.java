@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.zzler.R;
+import com.example.zzler.puzzleList.FirebaseHelper;
 import com.example.zzler.puzzleList.CloudImg;
 import com.example.zzler.puzzleList.PuzzleListView;
 import com.example.zzler.score.ScoreView;
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     //Firebase Storage - Cloud images
     public void showCloudImg (View v){
-        Intent i = new Intent (this, CloudImg.class);
+        Intent i = new Intent (this, FirebaseHelper.class);
         startActivity(i);
     }
 }
