@@ -271,6 +271,8 @@ public class PuzzleListView extends AppCompatActivity {
             j++;
         }
 
+        StorageReference refImg = storageRef.child("images/doctor_strange.jpg");
+
         files = new ArrayList<>();
         File outputFile = null;
         int b = 1;
@@ -284,21 +286,42 @@ public class PuzzleListView extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        fireImg1 = new File(getFilesDir(), "images1");
+        Log.i("FILEEEE", fireImg1.toString());
         //File localFile = new File(this.getFilesDir(), "img1");
         //File fireImg1 = new File(context.getCacheDir(), "img1");
         //Log.i("FILEEEE", fireImg1.toString());
         for (File file: files
         ) {
-            downloadFiles(remoteFireImg, file);
+            //downloadFiles(remoteFireImg, file);
 
         }
 
 //        File file = new File(context.getCacheDir(), "img1");
-        Log.i("FILEEEE", files.get(1).toString());
+        //Log.i("FILEEEE", files.get(1).toString());
+
+
+        refImg.getFile(fireImg1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
 
 
     }
-
+    public static File fireImg1;
     public static File getOneFile(int i){
         return files.get(i);
     }

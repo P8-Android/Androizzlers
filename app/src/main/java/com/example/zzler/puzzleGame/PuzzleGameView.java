@@ -556,7 +556,7 @@ MapImg mapImg;
         //mapImgToSplit.put(img,false);
 
 
-            File fireImg1 = PuzzleListView.getOneFile(0);
+            File fireImg1 = PuzzleListView.fireImg1;
             String pathName = fireImg1.getPath();
             Log.i("PATHNAME", pathName);
             Drawable d = Drawable.createFromPath(pathName.replace("jpg",".jpg"));
@@ -565,8 +565,8 @@ MapImg mapImg;
             Log.i("DRAWABLE", String.valueOf(""+d!=null));
 
             //bitmap = bitmapDrawable.getBitmap();
-
-            bitmap = BitmapFactory.decodeFile(fireImg1.getPath());
+            Log.i("PATHNAME", fireImg1.getAbsolutePath());
+            bitmap = BitmapFactory.decodeFile(fireImg1.getAbsolutePath().replace("jpg",".jpg"));
 
             //bitmap = ((BitmapDrawable) d).getBitmap();
             Log.i("BITTMAP", String.valueOf(""+bitmap!=null));
