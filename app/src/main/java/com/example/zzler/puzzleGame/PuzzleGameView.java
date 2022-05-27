@@ -616,10 +616,15 @@ MapImg mapImg;
 
 
             File fireImg1 = new File(context.getCacheDir(), files.get(1).toString());
-            String pathName = fireImg1.getPath().replace("jpg",".jpg");
+            String pathName = fireImg1.getPath();
+            Log.i("PATHNAME", pathName);
             Drawable d = Drawable.createFromPath(pathName);
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(pathName));
-            //Drawable d = new BitmapDrawable(getResources(), bitmap);
+            Log.i("DRAWABLE", String.valueOf(""+d!=null));
+            bitmap = BitmapFactory.decodeFile(pathName);
+
+            //bitmap = ((BitmapDrawable) d).getBitmap();
+            Log.i("BITTMAP", String.valueOf(""+bitmap!=null));
+        //Drawable d = new BitmapDrawable(getResources(), bitmap);
             imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.setImageDrawable(d);
@@ -766,6 +771,7 @@ MapImg mapImg;
 
         Collections.shuffle(pieces);
 
+        Log.i("PIEZES",pieces.toString());
         return pieces;
     }
 
