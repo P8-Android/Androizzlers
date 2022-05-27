@@ -351,8 +351,8 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         //File outputDir = this.getCacheDir(); // context being the Activity pointer
         try {
             files.add(File.createTempFile("images"+b, "jpg"));
-            File fireImg1 = new File(context.getCacheDir(), "images"+b);
-            Log.i("FILEEEE_toString", fireImg1.toString());
+            files.add(new File(context.getCacheDir(), "images"+b));
+            Log.i("FILEEEE_toString", files.get(1).toString());
             b++;
         } catch (IOException e) {
             e.printStackTrace();
@@ -615,10 +615,10 @@ MapImg mapImg;
         //mapImgToSplit.put(img,false);
 
 
-            File fireImg1 = new File(context.getCacheDir(), files.get(0).toString());
+            File fireImg1 = new File(context.getCacheDir(), files.get(1).toString());
             String pathName = fireImg1.getPath().replace("jpg",".jpg");
             Drawable d = Drawable.createFromPath(pathName);
-            bitmap = BitmapFactory.decodeFile(pathName);
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(pathName));
             //Drawable d = new BitmapDrawable(getResources(), bitmap);
             imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
