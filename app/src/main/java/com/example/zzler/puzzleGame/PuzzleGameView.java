@@ -51,6 +51,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -205,77 +206,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         startActivity(i);
     }
 
-    
-
-    public boolean isNewRecord(int level, int score){
-        int bestScoreStore = getScoreCalendar(level);
-        return bestScoreStore < score?false: true;
-    }
-
-    public JSONObject getBestScoreLevels(int maxLevel){
-        JSONObject bestScoreLevels = new JSONObject();
-
-        try {
-            for(int i=1; i<=maxLevel; i++){
-                String level = "Level " + i;
-                bestScoreLevels.put(level, getScoreCalendar(i));
-            }
-        //Log.i("TAG","" + bestScoreLevels.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return bestScoreLevels;
-    }
-
-    public int getScoreCalendar(int levelToEvaluate){
-        ArrayList <Integer> scoreLevelList = new ArrayList<Integer>();
-
-        final String[] EVENT_PROJECTION = new String[]{
-                CalendarContract.Events._ID,
-                CalendarContract.Events.TITLE,
-                CalendarContract.Events.DTSTART,
-                CalendarContract.Events.DTEND,
-        };
-
-        final int PROJECTION_ID_INDEX = 0;
-        final int PROJECTION_TITLE_INDEX = 1;
-        final int PROJECTION_DTSTART_INDEX = 2;
-        final int PROJECTION_DTEND_INDEX = 3;
-
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2020, 3, 18, 0, 0);
-        long startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, 3, 24, 0, 0);
-        long endMillis = endTime.getTimeInMillis();
-
-        String where = "( (title LIKE \'Puzzle%\') AND (calendar_id = " + 1 + "))";
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-
-            ContentResolver cr = getContentResolver();
-            Cursor cursor = cr.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, where,null, null, null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    String fullInfo = cursor.getString(PROJECTION_TITLE_INDEX);
-                    String score = fullInfo.split(" ")[3];
-                    Log.i("score", score);
-                    String level = fullInfo.split(" ")[0].split("#")[1];
-                    Log.i("level", level);
-                    if (Integer.parseInt(level) == levelToEvaluate){
-                        Log.i("GetMaxScore", level);
-                        scoreLevelList.add(Integer.parseInt(score));
-                    }
-                }
-                Collections.sort(scoreLevelList);
-                Log.i("TAG", "Para el nivel: "+levelToEvaluate+" el record es: " + scoreLevelList.get(0) + " segundos");
-                cursor.close();
-            }
-
-        }
-        Log.i("scoreLevelList", scoreLevelList.toString());
-        return scoreLevelList.get(0);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -322,7 +252,6 @@ public class PuzzleGameView extends AppCompatActivity implements IPuzzleGameView
         mapImgToSplit = mapImg.mapImgToSplit;
 
 
-        Log.i("FILEEE","Antes de todo");
 
 
 
@@ -531,6 +460,7 @@ protected void startTimer() {
     }
 
 MapImg mapImg;
+File fileImg;
 
     @SuppressLint("NewApi")
     protected ArrayList<PuzzlePiece> splitImage(Integer dificulty, Integer posImg) throws IOException {
@@ -545,6 +475,8 @@ MapImg mapImg;
         // Get the scaled bitmap of the source image
        // BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         //Bitmap bitmap = drawable.getBitmap(); BUG
+
+       /*
         int img = 0;
         do{
             img = getImgToSplit(posImg);
@@ -552,12 +484,39 @@ MapImg mapImg;
             Log.i("Boooolean",mapImgToSplit.get(img).toString());
         }while(mapImgToSplit.get(img)==false);
         mapImgToSplit.replace(img,false);
+       */
 
         //mapImgToSplit.put(img,false);
 
 
-            File fireImg1 = PuzzleListView.fireImg1;
-            String pathName = fireImg1.getPath();
+        switch (posImg){
+            case 1:
+                fileImg = PuzzleListView.fireImg1;
+                break;
+            case 2:
+                fileImg = PuzzleListView.fireImg2;
+                break;
+            case 3:
+                fileImg = PuzzleListView.fireImg3;
+                break;
+            case 4:
+                fileImg = PuzzleListView.fireImg4;
+                break;
+            case 5:
+                fileImg = PuzzleListView.fireImg5;
+                break;
+            case 6:
+                fileImg = PuzzleListView.fireImg6;
+                break;
+            case 7:
+                fileImg = PuzzleListView.fireImg7;
+                break;
+
+        }
+
+            // si es 1 fireImg1 -- Switch
+            //File fileImg = PuzzleListView.fireImg1;
+            String pathName = fileImg.getAbsolutePath();
             Log.i("PATHNAME", pathName);
             Drawable d = Drawable.createFromPath(pathName.replace("jpg",".jpg"));
 
@@ -565,8 +524,8 @@ MapImg mapImg;
             Log.i("DRAWABLE", String.valueOf(""+d!=null));
 
             //bitmap = bitmapDrawable.getBitmap();
-            Log.i("PATHNAME", fireImg1.getAbsolutePath());
-            bitmap = BitmapFactory.decodeFile(fireImg1.getAbsolutePath().replace("jpg",".jpg"));
+            Log.i("PATHNAME", fileImg.getAbsolutePath());
+            bitmap = BitmapFactory.decodeFile(fileImg.getAbsolutePath().replace("jpg",".jpg"));
 
             //bitmap = ((BitmapDrawable) d).getBitmap();
             Log.i("BITTMAP", String.valueOf(""+bitmap!=null));

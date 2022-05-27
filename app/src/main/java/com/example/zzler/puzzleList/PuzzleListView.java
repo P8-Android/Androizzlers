@@ -187,6 +187,55 @@ public class PuzzleListView extends AppCompatActivity {
         img1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                in.putExtra("pos",1);
+                startActivity(in);
+            }
+        });
+
+        img2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",2);
+                startActivity(in);
+            }
+        });
+
+        img3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",3);
+                startActivity(in);
+            }
+        });
+
+        img4.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",4);
+                startActivity(in);
+            }
+        });
+
+        img5.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",5);
+                startActivity(in);
+            }
+        });
+
+        img6.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",6);
+                startActivity(in);
+            }
+        });
+
+        img7.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                in.putExtra("pos",7);
                 startActivity(in);
             }
         });
@@ -262,18 +311,18 @@ public class PuzzleListView extends AppCompatActivity {
         namesJpg.add("star_lord.jpg");
 
 
-        remoteFireImg = new ArrayList<>();
 
-        int j = 0;
-        for (StorageReference ref: remoteFireImg
-        ) {
-            remoteFireImg.add(storageRef.child("images/"+namesJpg.get(j)));
-            j++;
-        }
 
-        StorageReference refImg = storageRef.child("images/doctor_strange.jpg");
+        StorageReference refImg1 = storageRef.child("images/doctor_strange.jpg");
+        StorageReference refImg2 = storageRef.child("images/gandalf.jpg");
+        StorageReference refImg3 = storageRef.child("images/gandalf_vs_demond.jpg");
+        StorageReference refImg4 = storageRef.child("images/groot.jpg");
+        StorageReference refImg5 = storageRef.child("images/hobbit_house.jpg");
+        StorageReference refImg6 = storageRef.child("images/hulk.jpg");
+        StorageReference refImg7 = storageRef.child("images/star_lord.jpg");
 
-        files = new ArrayList<>();
+
+  /*      files = new ArrayList<>();
         File outputFile = null;
         int b = 1;
         //File outputDir = this.getCacheDir(); // context being the Activity pointer
@@ -286,22 +335,135 @@ public class PuzzleListView extends AppCompatActivity {
             e.printStackTrace();
         }
 
+   */
+
         fireImg1 = new File(getFilesDir(), "images1");
-        Log.i("FILEEEE", fireImg1.toString());
+        fireImg2 = new File(getFilesDir(), "images2");
+        fireImg3 = new File(getFilesDir(), "images3");
+        fireImg4 = new File(getFilesDir(), "images4");
+        fireImg5 = new File(getFilesDir(), "images5");
+        fireImg6 = new File(getFilesDir(), "images6");
+        fireImg7 = new File(getFilesDir(), "images7");
+        Log.i("FILEEEE", fireImg2.toString());
         //File localFile = new File(this.getFilesDir(), "img1");
         //File fireImg1 = new File(context.getCacheDir(), "img1");
         //Log.i("FILEEEE", fireImg1.toString());
-        for (File file: files
-        ) {
-            //downloadFiles(remoteFireImg, file);
 
-        }
 
 //        File file = new File(context.getCacheDir(), "img1");
         //Log.i("FILEEEE", files.get(1).toString());
 
 
-        refImg.getFile(fireImg1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        refImg1.getFile(fireImg1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        // Segunda Imagen DownLoad
+        refImg2.getFile(fireImg2).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        refImg3.getFile(fireImg3).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        refImg4.getFile(fireImg4).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        refImg5.getFile(fireImg5).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        refImg6.getFile(fireImg6).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+
+                Log.i("FILEEE","exito");
+                //Aqui ya obtuviste el archivo, asi que puedes chequear su tamaño con un log
+
+                Log.i("Tamanio",""+taskSnapshot); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("FILEEE","failure"); //creo que era byte count pero con un get byte obtenias el tamaño del archivo
+            }
+        });
+
+        refImg7.getFile(fireImg7).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 // Local temp file has been created
@@ -322,9 +484,13 @@ public class PuzzleListView extends AppCompatActivity {
 
     }
     public static File fireImg1;
-    public static File getOneFile(int i){
-        return files.get(i);
-    }
+    public static File fireImg2;
+    public static File fireImg3;
+    public static File fireImg4;
+    public static File fireImg5;
+    public static File fireImg6;
+    public static File fireImg7;
+
 
     private void downloadFiles(ArrayList<StorageReference> remoteFireImg, File outputFile) {
         for (StorageReference ref: remoteFireImg
